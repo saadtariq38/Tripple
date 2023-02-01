@@ -1,0 +1,52 @@
+// @desc    Get agent info
+// @route   GET /api/agent/me
+// @access  Private
+const getMe = (req, res) => {
+    res.status(200).json({ message: "get agent info"})
+}
+
+// @desc    Get all agents info
+// @route   GET /api/agent
+// @access  Private
+const getAllAgents = (req, res) => {
+    res.status(200).json({ message: 'Get all agent info'})
+}
+
+// @desc    Create new agent account
+// @route   POST /api/agent/register
+// @access  Private
+const registerAgent = (req, res) => {
+    res.status(200).json({ message: 'register an agent'})
+}
+
+// @desc    Log into agent account
+// @route   POST /api/agent/login
+// @access  Private
+const loginAgent = (req, res) => {
+    res.status(200).json({ message: 'login agent account'})
+}
+
+
+// @desc    Delete agent with id
+// @route   DELETE /api/agent/:id
+// @access  Private
+const deleteAgent = (req, res) => {
+    res.status(200).json({ message: `agent deleted with id:${req.params.id}`})
+}
+
+// @desc    Update agent info with id
+// @route   PUT /api/agent/:id
+// @access  Private
+const updateAgent = (req, res) => {
+    res.status(200).json({ message: `agent info updated with id:${req.params.id}`})
+}
+
+
+module.exports = {
+  getMe,
+  getAllAgents,
+  registerAgent,
+  deleteAgent,
+  updateAgent,
+  loginAgent,
+}

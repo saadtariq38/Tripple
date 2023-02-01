@@ -3,7 +3,21 @@
 // @route   GET /api/trips
 // @access  Private
 const getTrips = (req, res) => {
-    res.status(200).json({ message: 'Get trips'})
+    res.status(200).json({ message: 'Get all trips'})
+}
+
+// @desc    Get user trips
+// @route   GET /api/trips/userTrips
+// @access  Private
+const getUsertrips = (req, res) => {
+    res.status(200).json({ message: 'Get user trips'})
+}
+
+// @desc    Get agent trips
+// @route   GET /api/trips/agentTrips
+// @access  Private
+const getAgenttrips = (req, res) => {
+    res.status(200).json({ message: 'Get agent trips'})
 }
 
 // @desc    Create new trip
@@ -33,4 +47,6 @@ module.exports = {
     setTrip,
     deleteTrip,
     updateTrip,
+    getUsertrips,
+    getAgenttrips,
 }
