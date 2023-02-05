@@ -75,7 +75,17 @@ const registerUser = asyncHandler(async(req, res) => {
                         res.status(400)
                        // throw new Error("user traveller not created")
                     } else {
-                        res.status(201).json(savedUserTraveller)
+                        res.status(201).json({
+                            _id: savedUserTraveller._id,
+                            user: savedUser._id,
+                            name: savedUserTraveller.name,
+                            gender: savedUserTraveller.gender,
+                            age: savedUserTraveller.age,
+                            country: savedUserTraveller.country,
+                            phone_number: savedUserTraveller.phone_number,
+                            passport_number: savedUserTraveller.passport_number,
+                            token: generateToken(savedUser._id, role_ID),
+                        })
                         
                     }
                 })
@@ -124,7 +134,17 @@ const registerUser = asyncHandler(async(req, res) => {
                     if(err) {
                         console.log(err)
                     } else {
-                        res.status(201).json(savedUserAgent)
+                        res.status(201).json({
+                            _id: savedUserAgent._id,
+                            user: savedUser._id,
+                            name: savedUserAgent.name,
+                            description: savedUserAgent.description,
+                            logo: savedUserAgent.logo,
+                            address: savedUserAgent.address,
+                            phone_number: savedUserAgent.phone_number,
+                            token: generateToken(savedUser._id, role_ID)
+                        })
+                        
                         
                     }
                 })
@@ -137,7 +157,56 @@ const registerUser = asyncHandler(async(req, res) => {
 // @route   POST /api/user/login
 // @access  Public
 const loginUser = asyncHandler(async(req, res) => {
-    res.status(200).json({ message: 'login user account'})
+    const { email, password, role_ID } = req.body
+
+    //check for user email
+    const user = await User.findOne({ email })
+    const { _id } = user
+    
+
+    //user exists and passwords match condition
+    if(user && (await bcrypt.compare(password, user.password))) {
+        if(role_ID == 1) {   //condition for User_Traveller
+            try {
+                const user_traveller = await User_Traveller.findOne({ user: _id })
+                
+                res.json({
+                    _id: user_traveller._id,
+                    user: user_traveller.user,
+                    name: user_traveller.name,
+                    gender: user_traveller.gender,
+                    age: user_traveller.age,
+                    country: user_traveller.country,
+                    phone_number: user_traveller.phone_number,
+                    passport_number: user_traveller.passport_number,
+                    token: generateToken( _id, role_ID ),
+                })
+            } catch (error) {
+                console.log(error)
+            }
+        } else if (role_ID == 2) {  //condition for user_Agent
+            try {
+                const user_agent = await User_Agent.findOne({ user: _id })
+                res.json({
+                    _id: user_agent._id,
+                    user: user_agent.user,
+                    name: user_agent.name,
+                    phone_number: user_agent.phone_number,
+                    description: user_agent.description,
+                    address: user_agent.address,
+                    logo: user_agent.logo,
+                    numOfActiveTrips: user_agent.numOfActiveTrips,
+                    token: generateToken( _id, role_ID ),
+                })  
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    } else {
+        res.status(400)
+        throw new Error("Invalid user data")
+    }
+
 })
 
 
@@ -145,15 +214,65 @@ const loginUser = asyncHandler(async(req, res) => {
 // @route   DELETE /api/user/:id
 // @access  Private
 const deleteUser = asyncHandler(async(req, res) => {
-    res.status(200).json({ message: `user deleted with id:${req.params.id}`})
+    const { role_ID } = req.body
+    const userExists = await User.findOne({ _id: req.params.id })
+    if(role_ID == 1) {
+        const user_traveller = await User_Traveller.findOne({user: userExists._id})
+        await user_traveller.remove()
+        await userExists.remove()
+
+        res.status(200).json({ id: req.params.id })
+        
+    } else if(role_ID == 2) {
+        const user_agent = await User_Agent.findOne({user: userExists._id})
+        await user_agent.remove()
+        await userExists.remove()
+
+        res.status(200).json({ id: req.params.id })
+    }
+
 })
 
 // @desc    Update user info with id
 // @route   PUT /api/user/:id
 // @access  Private
 const updateUser = asyncHandler(async(req, res) => {
-    res.status(200).json({ message: `user info updated with id:${req.params.id}`})
+    const { role_ID }  = req.body
+    const userExists = await User.findOne({ _id: req.params.id })
+
+    if(role_ID == 1) {
+        const { name, gender, age, country, phone_number, passport_number } = req.body
+        
+
+        const updated_user_traveller = await User_Traveller.findOneAndUpdate({user: userExists._id}, {
+            name, gender, age, country, phone_number, passport_number
+        })
+
+        res.status(200)
+        res.json(updated_user_traveller)
+
+    } else if (role_ID == 2) {
+        const { name, description, logo, address, phone_number } = req.body
+        const updated_user_agent = await User_Agent.findOneAndUpdate({user: userExists._id}, {
+            name, description, logo, address, phone_number
+        })
+
+        res.status(200).json(updated_user_agent)
+    }
+
 })
+
+//Genereate Token
+
+const generateToken = ( id, role_ID ) => {
+    // payload = {
+    //     "id": id,
+    //     "role_ID": role_ID
+    // }
+    return jwt.sign({id , role_ID}, process.env.JWT_SECRET, {
+        expiresIn: '30d',
+    })
+}
 
 
 module.exports = {
