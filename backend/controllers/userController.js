@@ -11,14 +11,44 @@ const asyncHandler = require('express-async-handler')
 // @route   GET /api/user/me
 // @access  Private
 const getMe = asyncHandler(async(req, res) => {
-    res.status(200).json({ message: "get user info"})
+    const { _id, email, role } = req.user
+    let moreInfo
+    if(role == 1) {
+        moreInfo = await User_Traveller.find({user: _id})
+    } else if (role == 2) {
+        moreInfo = await User_Agent.find({user: _id})
+    }
+
+    res.status(200).json({
+        id: _id,
+        email,
+        role: role,
+        moreInfo
+    })
 })
 
-// @desc    Get all auser info
+// @desc    Get all user info
 // @route   GET /api/user
-// @access  Private
+// @access  Public
 const getAllUsers = asyncHandler(async(req, res) => {
-    res.status(200).json({ message: 'Get all user info'})
+    const users = await User.find({})
+    res.status(200).json(users)
+})
+
+// @desc    Get all user traveller info
+// @route   GET /api/user/traveller
+// @access  Public
+const getAllTravellers = asyncHandler(async(req, res) => {
+    const travellers = await User_Traveller.find({})
+    res.status(200).json(travellers)
+})
+
+// @desc    Get all user agent info
+// @route   GET /api/user/agent
+// @access  Public
+const getAllAgents = asyncHandler(async(req, res) => {
+    const agents = await User_Agent.find({})
+    res.status(200).json(agents)
 })
 
 // @desc    Create new user account
@@ -214,21 +244,27 @@ const loginUser = asyncHandler(async(req, res) => {
 // @route   DELETE /api/user/:id
 // @access  Private
 const deleteUser = asyncHandler(async(req, res) => {
-    const { role_ID } = req.body
+    const { _id, role } = req.user
     const userExists = await User.findOne({ _id: req.params.id })
-    if(role_ID == 1) {
-        const user_traveller = await User_Traveller.findOne({user: userExists._id})
-        await user_traveller.remove()
-        await userExists.remove()
 
-        res.status(200).json({ id: req.params.id })
-        
-    } else if(role_ID == 2) {
-        const user_agent = await User_Agent.findOne({user: userExists._id})
-        await user_agent.remove()
-        await userExists.remove()
-
-        res.status(200).json({ id: req.params.id })
+    if(req.params.id == _id) {
+        if(role == 1) {
+            const user_traveller = await User_Traveller.findOne({user: userExists._id})
+            await user_traveller.remove()
+            await userExists.remove()
+    
+            res.status(200).json({ id: req.params.id })
+    
+        } else if(role == 2) {
+            const user_agent = await User_Agent.findOne({user: userExists._id})
+            await user_agent.remove()
+            await userExists.remove()
+    
+            res.status(200).json({ id: req.params.id })
+        }
+    } else {
+        res.status(401)
+        throw new Error("not authorized to delete this user")
     }
 
 })
@@ -237,28 +273,33 @@ const deleteUser = asyncHandler(async(req, res) => {
 // @route   PUT /api/user/:id
 // @access  Private
 const updateUser = asyncHandler(async(req, res) => {
-    const { role_ID }  = req.body
+    const { _id, role }  = req.user
     const userExists = await User.findOne({ _id: req.params.id })
-
-    if(role_ID == 1) {
-        const { name, gender, age, country, phone_number, passport_number } = req.body
-        
-
-        const updated_user_traveller = await User_Traveller.findOneAndUpdate({user: userExists._id}, {
-            name, gender, age, country, phone_number, passport_number
-        })
-
-        res.status(200)
-        res.json(updated_user_traveller)
-
-    } else if (role_ID == 2) {
-        const { name, description, logo, address, phone_number } = req.body
-        const updated_user_agent = await User_Agent.findOneAndUpdate({user: userExists._id}, {
-            name, description, logo, address, phone_number
-        })
-
-        res.status(200).json(updated_user_agent)
+    if(req.params.id == _id) {
+        if(role == 1) {
+            const { name, gender, age, country, phone_number, passport_number } = req.body
+            
+    
+            const updated_user_traveller = await User_Traveller.findOneAndUpdate({user: userExists._id}, {
+                name, gender, age, country, phone_number, passport_number
+            })
+    
+            res.status(200)
+            res.json(updated_user_traveller)
+    
+        } else if (role_ID == 2) {
+            const { name, description, logo, address, phone_number } = req.body
+            const updated_user_agent = await User_Agent.findOneAndUpdate({user: userExists._id}, {
+                name, description, logo, address, phone_number
+            })
+    
+            res.status(200).json(updated_user_agent)
+        }
+    } else {
+        res.status(401)
+        throw new Error("not authorized to update this user")
     }
+
 
 })
 
@@ -282,4 +323,7 @@ module.exports = {
   deleteUser,
   updateUser,
   loginUser,
+  getAllAgents,
+  getAllTravellers,
+  
 }
