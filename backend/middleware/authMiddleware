@@ -1,18 +1,53 @@
 const jwt = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
 const User = require('../models/userModel')
+const { generateAccessToken, generateRefreshToken } = require('../helper/tokenHelpers')
+const { tokenList } = require('../controllers/userController')
 
 const protect = asyncHandler(async (req, res, next) => {
     let token
+    let decoded
 
     if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {
             //Get token
             token = req.headers.authorization.split(' ')[1]
-
+            
             //Verify token
-            const decoded = jwt.verify(token, process.env.JWT_SECRET)
+            try {
+                decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+                console.log("Valid token: ", decoded);
+            } catch (err) {
+                if (err.message === 'jwt expired') {
+                    console.log("Expired token");
 
+                    //get refresh token from temp file
+                    const refreshToken = tokenList.refreshToken
+                    console.log("got refresh token: " + refreshToken)
+
+                    //get user id and role from refresh token
+                    const refreshDecoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET)
+                    const { id, role } = refreshDecoded
+
+                    console.log("here")
+
+                    // generate new access token
+                    const newAccessToken = generateAccessToken(id, role)
+                    console.log("new access token created")
+
+                    //save new access token in temp file
+                    tokenList.accessToken = newAccessToken
+
+                    //use new access token to get decoded values
+                    decoded = jwt.verify(newAccessToken, process.env.JWT_ACCESS_SECRET);
+                    console.log("New valid token after prev expiry: ", decoded);
+
+                } else if (err.message === 'invalid signature') {
+                    console.log("Invalid token");
+                } else {
+                    console.log("Error: ", err.message);
+                }
+            }
             //Get user from token ID
             req.user = await User.findById(decoded.id).select('-password')
 
