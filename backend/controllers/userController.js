@@ -330,7 +330,8 @@ const updateUser = asyncHandler(async(req, res) => {
 
 })
 
-//Generate Access Token
+
+
 
 
 
