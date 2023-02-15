@@ -64,7 +64,7 @@ const registerUser = asyncHandler(async(req, res) => {
 
     if(!role) {
         res.status(400)
-       // throw new Error("please add a role")
+        throw new Error("please add a role")
     }
 
     // if a traveller registers i.e role = 1
@@ -73,7 +73,7 @@ const registerUser = asyncHandler(async(req, res) => {
 
         if(!name || !gender || !age || !country || !phone_number || !passport_number) {
             res.status(400)
-          //  throw new Error("please add all fields")
+            throw new Error("please add all fields")
         }
 
         //this indicates the same email cant be used to make an agent and traveller account
@@ -81,7 +81,7 @@ const registerUser = asyncHandler(async(req, res) => {
         
         if(userExists) {
             res.status(400)
-           // throw new Error("User already exists")
+            throw new Error("User already exists")
         }
 
         //Hash password
@@ -108,7 +108,7 @@ const registerUser = asyncHandler(async(req, res) => {
                 }, (err, savedUserTraveller) => {
                     if(err) {
                         res.status(400)
-                       // throw new Error("user traveller not created")
+                        throw new Error("user traveller not created")
                     } else {
                         const accToken = generateAccessToken(savedUser._id, role)
                         const refToken = generateRefreshToken(savedUser._id, role)
@@ -139,7 +139,7 @@ const registerUser = asyncHandler(async(req, res) => {
 
         if(!name || !description || !phone_number || !address) {
             res.status(400)
-          //  throw new Error("please add all required fields")
+            throw new Error("please add all required fields")
         }
 
         //this indicates the same email cant be used to make an agent and traveller account
@@ -147,7 +147,7 @@ const registerUser = asyncHandler(async(req, res) => {
         
         if(userExists) {
             res.status(400)
-           // throw new Error("User already exists")
+            throw new Error("User already exists")
         }
 
         //Hash password
@@ -204,8 +204,16 @@ const registerUser = asyncHandler(async(req, res) => {
 const loginUser = asyncHandler(async(req, res) => {
     const { email, password, role } = req.body
 
+    let user
+
     //check for user email
-    const user = await User.findOne({ email })
+    try {
+        user = await User.findOne({ email })
+    } catch (error) {
+        res.status(404)
+        throw new Error("User not found")
+    }
+    
     const { _id } = user
     
 
