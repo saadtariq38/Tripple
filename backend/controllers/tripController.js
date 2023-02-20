@@ -1,31 +1,162 @@
+const Trip = require('../models/tripModel')
+const User_Agent = require('../models/user_agentModel')
 
-// @desc    Get all trips
+const asyncHandler = require('express-async-handler')
+
+
+// @desc    Get all trips or filter by category and type according to body data
 // @route   GET /api/trips
-// @access  Private
-const getTrips = (req, res) => {
-    res.status(200).json({ message: 'Get all trips'})
-}
+// @access  Public
+const getTrips = asyncHandler(async(req, res) => {
+    let trip
+    if (!req.body.tripCategory && !req.body.tripType) {
+       trip = await Trip.find({})
+    } else if (!req.body.tripType) {
+       const { tripCategory } = req.body
+       
+       tripCategory.toLowerCase(); 
+       if(tripCategory === "educational") {
+            trip = await Trip.find({tripCategory: tripCategory})
+       } else if (tripCategory === "recreational") {
+            trip = await Trip.find({tripCategory: tripCategory})
+       }
+       else if (tripCategory === "entertainment") {
+            trip = await Trip.find({tripCategory: tripCategory})
+       }
+       else{
+           res.status(400)
+           throw new Error ('No relevant trips found according to category')
+       }   
+   } else if (!req.body.tripCategory) {
+    const { tripType } = req.body
+    tripType.toLowerCase(); 
+    if(tripType === "local") {
+        trip = await Trip.find({tripType: tripType})
+    } else if (tripType === "international") {
+        trip = await Trip.find({tripType: tripType})
+    }
+    else{
+        res.status(400)
+        throw new Error ('No relevant trips found according to type')
+    } 
+   } else {
+    res.status(400)
+    throw new Error("could not find trips")
+   }
+
+    res.status(200).json({
+        trip
+    })
+})
+
+
+// const getTrips = asyncHandler( async(req, res) => {
+//     try {
+//         const trips = await Trip.find({})
+//         res.status(200).json(trips)
+//     } catch (error) {
+//         res.status(404)
+//         throw new Error("Fetching trips failed")
+//     }
+// })
 
 // @desc    Get user trips
 // @route   GET /api/trips/userTrips
 // @access  Private
-const getUsertrips = (req, res) => {
-    res.status(200).json({ message: 'Get user trips'})
-}
+const getUsertrips = asyncHandler(async (req, res) => {
+   const { _id, email, role } = req.user;
 
-// @desc    Get agent trips
-// @route   GET /api/trips/agentTrips
-// @access  Private
-const getAgenttrips = (req, res) => {
-    res.status(200).json({ message: 'Get agent trips'})
-}
+   try {
+       if(role == 1) {
+           const userTrips = await Trip.find({'registeredUsers.user' : _id})
+           res.status(200).json(userTrips)
+       } else if(role == 2) {
+            const user_agent = await User_Agent.find({user: _id})
+            const agent_trips = await Trip.find({agent: user_agent._id})
+            res.status(200).json(agent_trips)
+       }
+   } catch (error) {
+    res.status(400)
+    throw new Error("Failed to get user trips")
+   }
+
+
+})
+
+
+// @desc    Get one trip through id
+// @route   GET /api/trips/:id
+// @access  Public
+const getOneTrip = asyncHandler( async (req, res) => {
+    try {
+        const trip = await Trip.findById(req.params.id)
+        res.status(200).json(trip)
+    } catch (error) {
+        res.status(404)
+        throw new Error('Trip not found')
+    }
+})
+
+
+
 
 // @desc    Create new trip
 // @route   POST /api/trips
 // @access  Private
-const setTrip = (req, res) => {
-    res.status(200).json({ message: 'new trip created'})
-}
+const setTrip = asyncHandler( async (req, res) => {
+    const { _id, role } = req.user
+    if(role == 1) {
+        res.status(401)
+        throw new Error('Only an agent can create trips')
+    } else if(role ==2) {
+        
+
+        //get agent info from the id we got from auth token
+      //  const agentInfo = await User_Agent.find({user: _id})
+        const { name, description, duration, images, tripCategory, tripType, cost, availableSeats, startingLocation, destination, itinerary } = req.body
+
+        //check for all required fields
+        if(!name || !description || !duration || !tripCategory || !tripType || !cost || !availableSeats || !startingLocation || !destination || !itinerary) {
+            res.status(400)
+            throw new Error("please add all fields")
+        }
+
+            
+
+            //create trip
+        
+        await Trip.create({
+            agent: _id,
+            name,
+            description,
+            duration,
+            images,
+            tripCategory,
+            tripType,
+            cost,
+            status: "available",
+            availableSeats: 0,
+            rating: 0,
+            numOfRatings: 0,
+            startingLocation,
+            destination,
+            itinerary
+        }, function (err, newTrip) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.status(200).json(newTrip)
+            }
+        });
+
+
+           
+
+       
+        
+    }
+   
+})
 
 // @desc    Delete trip with id
 // @route   DELETE /api/trips/:id
@@ -48,5 +179,5 @@ module.exports = {
     deleteTrip,
     updateTrip,
     getUsertrips,
-    getAgenttrips,
+    getOneTrip,
 }

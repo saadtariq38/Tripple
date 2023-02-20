@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const User = require("./userModel");
 const Schema = mongoose.Schema;
 
 const tripSchema = new Schema({
@@ -19,6 +20,16 @@ const tripSchema = new Schema({
         type: String,
         required: true
     },
+    registeredUsers: {
+        type: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "User_Traveller",
+            }
+        ],
+
+        default: []
+    },
     images: {
         type: [
             {
@@ -38,7 +49,7 @@ const tripSchema = new Schema({
         type: Number,
         required: true
     },
-    status: {
+    status: {   //Available, Full, Ongoing, Completed
         type: String,
     },
     availableSeats: {
@@ -59,6 +70,7 @@ const tripSchema = new Schema({
                 type: String,
             }
         ],
+        default: []
     },
     startingLocation: {
         type: String,
