@@ -8,44 +8,47 @@ const asyncHandler = require('express-async-handler')
 // @route   GET /api/trips
 // @access  Public
 const getTrips = asyncHandler(async(req, res) => {
-    let trip
+    let trip = new Array();
     if (!req.body.tripCategory && !req.body.tripType) {
        trip = await Trip.find({})
-    } else if (!req.body.tripType) {
-       const { tripCategory } = req.body
-       
-       tripCategory.toLowerCase(); 
-       if(tripCategory === "educational") {
-            trip = await Trip.find({tripCategory: tripCategory})
-       } else if (tripCategory === "recreational") {
-            trip = await Trip.find({tripCategory: tripCategory})
-       }
-       else if (tripCategory === "entertainment") {
-            trip = await Trip.find({tripCategory: tripCategory})
-       }
+    }
+    if (req.body.tripCategory) {
+        let { tripCategory } = req.body
+        tripCategory = tripCategory.toLowerCase(); 
+        if(tripCategory === "educational") {
+            trip.push(await Trip.find({tripCategory: tripCategory}))
+        } else if (tripCategory === "recreational") {
+            trip.push(await Trip.find({tripCategory: tripCategory}))
+        }
+        else if(tripCategory === "entertainment"){
+            trip.push(await Trip.find({tripCategory: tripCategory}))
+        }
        else{
            res.status(400)
            throw new Error ('No relevant trips found according to category')
        }   
-   } else if (!req.body.tripCategory) {
-    const { tripType } = req.body
-    tripType.toLowerCase(); 
+   }
+   if (req.body.tripType) {
+    let { tripType } = req.body
+    tripType = tripType.toLowerCase(); 
     if(tripType === "local") {
-        trip = await Trip.find({tripType: tripType})
-    } else if (tripType === "international") {
-        trip = await Trip.find({tripType: tripType})
+        trip.push(await Trip.find({tripType: tripType}))
+        } else if (tripType === "international") {
+        trip.push(await Trip.find({tripType: tripType}))
     }
     else{
         res.status(400)
         throw new Error ('No relevant trips found according to type')
     } 
-   } else {
-    res.status(400)
-    throw new Error("could not find trips")
-   }
+   } 
+//    else {
+//     res.status(400)
+//     throw new Error("could not find trips")
+//    }
+const unique = [...new Map(trip.map((m) => [trip.name, m])).values()];
 
     res.status(200).json({
-        trip
+        unique
     })
 })
 
