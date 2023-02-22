@@ -164,9 +164,31 @@ const setTrip = asyncHandler( async (req, res) => {
 // @desc    Delete trip with id
 // @route   DELETE /api/trips/:id
 // @access  Private
-const deleteTrip = (req, res) => {
-    res.status(200).json({ message: `trip deleted with id:${req.params.id}`})
-}
+const deleteTrip = asyncHandler( async (req, res) => {
+    const { _id, role } = req.user
+    if(role == 1) {
+        res.status(401)
+        throw new Error("User not authorized to update trip")
+    }
+
+   
+    const tripToDelete = await Trip.findById(req.params.id)
+    console.log(_id)
+    console.log(tripToDelete.agent)
+    if (tripToDelete.agent.equals(_id)) {
+        await tripToDelete.remove()
+        res.status(200).json({_id : req.params.id})
+        
+    } else {
+        res.status(401)
+        throw new Error("Sorry, only authorized to delete your own trips")
+    }
+
+   
+    
+
+
+})
 
 // @desc    Update trip with id
 // @route   PUT /api/trips/:id
