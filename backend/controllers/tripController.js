@@ -138,7 +138,7 @@ const setTrip = asyncHandler( async (req, res) => {
             tripType,
             cost,
             status: "available",
-            availableSeats: 0,
+            availableSeats,
             rating: 0,
             numOfRatings: 0,
             startingLocation,
@@ -168,14 +168,13 @@ const deleteTrip = asyncHandler( async (req, res) => {
     const { _id, role } = req.user
     if(role == 1) {
         res.status(401)
-        throw new Error("User not authorized to update trip")
+        throw new Error("User not authorized to delete trip")
     }
 
    
     const tripToDelete = await Trip.findById(req.params.id)
-    console.log(_id)
-    console.log(tripToDelete.agent)
-    if (tripToDelete.agent.equals(_id)) {
+    
+    if (tripToDelete.agent.equals(_id)) {       //NOTE .equals ONLY WORKING WHEN THE OBJECT IS OBTAINED THROUGH FindById  *******
         await tripToDelete.remove()
         res.status(200).json({_id : req.params.id})
         
@@ -193,9 +192,31 @@ const deleteTrip = asyncHandler( async (req, res) => {
 // @desc    Update trip with id
 // @route   PUT /api/trips/:id
 // @access  Private
-const updateTrip = (req, res) => {
-    res.status(200).json({ message: `trip updated with id:${req.params.id}`})
-}
+const updateTrip = asyncHandler(async (req, res) => {
+    const { _id, role } = req.user
+    if(role == 1) {    //if user is a traveller they cannot update a trip
+        res.status(401)
+        throw new Error("User not authorized to update trip")
+    }
+
+    const tripToUpdate = await Trip.findById(req.params.id) //find the trip to be updated using params
+    
+
+    if(tripToUpdate.agent.equals(_id)) {    //if the trip in params matches the logged in agent user
+        const { name, description, duration, images, tripCategory, tripType, status, availableSeats, startingLocation, destination, itinerary } = req.body 
+
+        const updatedTrip = await Trip.findOneAndUpdate({_id : req.params.id}, {    //update trip with the body
+            name, description, duration, images, tripCategory, tripType, status, availableSeats, startingLocation, destination, itinerary
+        })
+
+        res.status(200).json(updatedTrip)
+    } else {
+        res.status(401)
+        throw new Error("Cannot update trips that were not created by the logged in agent")
+    }
+
+
+})
 
 
 module.exports = {
