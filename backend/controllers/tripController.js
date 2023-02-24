@@ -203,10 +203,10 @@ const updateTrip = asyncHandler(async (req, res) => {
     
 
     if(tripToUpdate.agent.equals(_id)) {    //if the trip in params matches the logged in agent user
-        const { name, description, duration, images, tripCategory, tripType, status, availableSeats, startingLocation, destination, itinerary } = req.body 
+        const { name, description, duration, images, tripCategory, tripType, cost, status, availableSeats, startingLocation, destination, itinerary } = req.body 
 
         const updatedTrip = await Trip.findOneAndUpdate({_id : req.params.id}, {    //update trip with the body
-            name, description, duration, images, tripCategory, tripType, status, availableSeats, startingLocation, destination, itinerary
+            name, description, duration, images, tripCategory, tripType, cost, status, availableSeats, startingLocation, destination, itinerary
         })
 
         res.status(200).json(updatedTrip)
@@ -218,6 +218,50 @@ const updateTrip = asyncHandler(async (req, res) => {
 
 })
 
+// @desc    Sort trips according to value passed in body
+// @route   GET /api/trips/sortedTrips
+// @access  Public
+const sortTrips = asyncHandler(async (req, res) => {
+
+    const { sortBy, sortOrder } = req.body
+
+    const trips = await Trip.find({})
+    const sortedTrips = trips
+
+    try {
+    
+        // Sort by cost
+        if (sortBy === 'cost') {
+            sortedTrips.sort((a, b) => {
+                if (sortOrder === 'asc') {
+                    return a.cost - b.cost;        //built-in javascript sort function return 1
+                } else if (sortOrder === 'desc') {
+                    return b.cost - a.cost;
+                }
+            });
+        }
+    
+        // Sort by duration
+        if (sortBy === 'duration') {
+            sortedTrips.sort((a, b) => {
+                if (sortOrder === 'asc') {
+                    return a.duration - b.duration;
+                } else if (sortOrder === 'desc') {
+                    return b.duration - a.duration;
+                }
+            });
+        }   
+    } catch (error) {
+        res.status(400)
+        throw new Error("Unable to sort trips")
+    }
+
+    res.status(200).json(sortedTrips)
+
+
+})
+
+
 
 module.exports = {
     getTrips,
@@ -226,4 +270,5 @@ module.exports = {
     updateTrip,
     getUsertrips,
     getOneTrip,
+    sortTrips,
 }

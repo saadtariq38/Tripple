@@ -16,8 +16,8 @@ const tripSchema = new Schema({
         type: String,
         required: true
     },
-    duration: {
-        type: String,
+    duration: {     //the duration is in days
+        type: Number,
         required: true
     },
     registeredUsers: {

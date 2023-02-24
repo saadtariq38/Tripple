@@ -1,11 +1,12 @@
 const express = require('express')
 const router = express.Router()
 const { protect } = require('../middleware/authMiddleware')
-const { getTrips, setTrip, updateTrip, deleteTrip , getUsertrips, getOneTrip,} = require('../controllers/tripController')
+const { getTrips, setTrip, updateTrip, deleteTrip , getUsertrips, getOneTrip, sortTrips,} = require('../controllers/tripController')
 
 router.route('/').get(getTrips).post(protect, setTrip)
-router.route('/:id').put(protect, updateTrip).delete(protect, deleteTrip).get(getOneTrip)
+router.route('/sortedTrips').get(sortTrips)
 router.route('/userTrips').get(protect, getUsertrips)
+router.route('/:id').put(protect, updateTrip).delete(protect, deleteTrip).get(getOneTrip)       //The routes are read in order so keep routes with :id at the end
     
 
 
