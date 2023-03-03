@@ -1,6 +1,7 @@
 const User = require('../models/userModel')
 const User_Traveller = require('../models/user_travellerModel')
 const User_Agent = require('../models/user_agentModel')
+const User_Event = require("../models/userEventsModel")
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { generateAccessToken, generateRefreshToken } = require('../helper/tokenHelpers')
@@ -114,6 +115,16 @@ const registerUser = asyncHandler(async(req, res) => {
                         const refToken = generateRefreshToken(savedUser._id, role)
                         tokenList.refreshToken = refToken
                         tokenList.accessToken = accToken
+
+                        User_Event.create({
+                            user: savedUser._id,
+                            eventType: 1,
+                        }, (err, savedUserEvent) => {
+                            if(err) {
+                                res.status(400)
+                                throw new Error("Could not create a register event")
+                            }
+                        })
                         res.status(201).json({
                             _id: savedUserTraveller._id,
                             user: savedUser._id,
@@ -178,6 +189,17 @@ const registerUser = asyncHandler(async(req, res) => {
                         const refToken = generateRefreshToken(savedUser._id, role)
                         tokenList.refreshToken = refToken
                         tokenList.accessToken = accToken
+
+                        User_Event.create({
+                            user: savedUser._id,
+                            eventType: 1,
+                        }, (err, savedUserEvent) => {
+                            if(err) {
+                                res.status(400)
+                                throw new Error("Could not create a register event")
+                            }
+                        })
+
                         res.status(201).json({
                             _id: savedUserAgent._id,
                             user: savedUser._id,
@@ -226,7 +248,17 @@ const loginUser = asyncHandler(async(req, res) => {
                 const refToken = generateRefreshToken( _id, role )
                 tokenList.refreshToken = refToken
                 tokenList.accessToken = accToken
-                console.log(tokenList.refreshToken)
+
+                User_Event.create({
+                    user: _id,
+                    eventType: 2,
+                }, (err, savedUserEvent) => {
+                    if(err) {
+                        res.status(400)
+                        throw new Error("Could not create a login event")
+                    }
+                })
+
                 res.json({
                     _id: user_traveller._id,
                     user: user_traveller.user,
@@ -241,7 +273,7 @@ const loginUser = asyncHandler(async(req, res) => {
 
                 })
             } catch (error) {
-                console.log(error)
+                throw new Error("Login failedmfor traveller")
             }
         } else if (role== 2) {  //condition for user_Agent
             try {
@@ -250,6 +282,17 @@ const loginUser = asyncHandler(async(req, res) => {
                 const refToken = generateRefreshToken( _id, role)
                 tokenList.refreshToken = refToken
                 tokenList.accessToken = accToken
+
+                User_Event.create({
+                    user: _id,
+                    eventType: 2,
+                }, (err, savedUserEvent) => {
+                    if(err) {
+                        res.status(400)
+                        throw new Error("Could not create a login event")
+                    }
+                })
+
                 res.json({
                     _id: user_agent._id,
                     user: user_agent.user,
@@ -263,7 +306,7 @@ const loginUser = asyncHandler(async(req, res) => {
                     refreshToken: refToken,
                 })  
             } catch (error) {
-                console.log(error)
+                throw new Error("Login Failed for agent")
             }
         }
     } else {
@@ -286,6 +329,16 @@ const deleteUser = asyncHandler(async(req, res) => {
             const user_traveller = await User_Traveller.findOne({user: userExists._id})
             await user_traveller.remove()
             await userExists.remove()
+
+            User_Event.create({
+                user: _id,
+                eventType: 3,
+            }, (err, savedUserEvent) => {
+                if(err) {
+                    res.status(400)
+                    throw new Error("Could not create a delete user event")
+                }
+            })
     
             res.status(200).json({ id: req.params.id })
     
@@ -293,6 +346,16 @@ const deleteUser = asyncHandler(async(req, res) => {
             const user_agent = await User_Agent.findOne({user: userExists._id})
             await user_agent.remove()
             await userExists.remove()
+
+            User_Event.create({
+                user: _id,
+                eventType: 3,
+            }, (err, savedUserEvent) => {
+                if(err) {
+                    res.status(400)
+                    throw new Error("Could not create a delete user event")
+                }
+            })
     
             res.status(200).json({ id: req.params.id })
         }
@@ -318,14 +381,36 @@ const updateUser = asyncHandler(async(req, res) => {
             const updated_user_traveller = await User_Traveller.findOneAndUpdate({user: userExists._id}, {
                 name, gender, age, country, phone_number, passport_number
             })
+
+            User_Event.create({
+                user: _id,
+                eventType: 4,
+                additionalInfo: updated_user_traveller,
+            }, (err, savedUserEvent) => {
+                if(err) {
+                    res.status(400)
+                    throw new Error("Could not create a delete user event")
+                }
+            })
     
-            res.status(200)
-            res.json(updated_user_traveller)
+            res.status(200).json(updated_user_traveller)
+            
     
         } else if (role == 2) {
             const { name, description, logo, address, phone_number } = req.body
             const updated_user_agent = await User_Agent.findOneAndUpdate({user: userExists._id}, {
                 name, description, logo, address, phone_number
+            })
+
+            User_Event.create({
+                user: _id,
+                eventType: 4,
+                additionalInfo: updated_user_agent,
+            }, (err, savedUserEvent) => {
+                if(err) {
+                    res.status(400)
+                    throw new Error("Could not create a delete user event")
+                }
             })
     
             res.status(200).json(updated_user_agent)

@@ -1,0 +1,13 @@
+Enums for User Events:
+    Register: 1
+    Login: 2
+    Delete User: 3
+    Update User: 4
+
+Enums for Trip Events
+    Created Trip: 5
+    Updated Trip: 6
+    Deleted Trip: 7
+    Cancelled Trip: 8
+    Registered for a Trip: 9
+    Unregistered for a Trip: 10

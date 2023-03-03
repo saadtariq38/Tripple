@@ -1,5 +1,6 @@
 const Trip = require('../models/tripModel')
 const User_Agent = require('../models/user_agentModel')
+const Trip_Event = require("../models/tripEventsModel")
 
 const asyncHandler = require('express-async-handler')
 
@@ -148,6 +149,16 @@ const setTrip = asyncHandler( async (req, res) => {
             if (err) {
                 console.log(err);
             } else {
+                Trip_Event.create({
+                    user: _id,
+                    trip: newTrip._id,
+                    eventType: 5,
+                }, (err, savedTripEvent) => {
+                    if(err) {
+                        res.status(400)
+                        throw new Error("Could not create a set trip event")
+                    }
+                })
                 res.status(200).json(newTrip)
             }
         });
@@ -176,6 +187,17 @@ const deleteTrip = asyncHandler( async (req, res) => {
     
     if (tripToDelete.agent.equals(_id)) {       //NOTE .equals ONLY WORKING WHEN THE OBJECT IS OBTAINED THROUGH FindById  *******
         await tripToDelete.remove()
+
+        Trip_Event.create({
+            user: _id,
+            trip: tripToDelete._id,
+            eventType: 7,
+        }, (err, savedTripEvent) => {
+            if(err) {
+                res.status(400)
+                throw new Error("Could not create a delete trip event")
+            }
+        })
         res.status(200).json({_id : req.params.id})
         
     } else {
@@ -209,6 +231,17 @@ const updateTrip = asyncHandler(async (req, res) => {
             name, description, duration, images, tripCategory, tripType, cost, status, availableSeats, startingLocation, destination, itinerary
         })
 
+        Trip_Event.create({
+            user: _id,
+            trip: tripToUpdate._id,
+            eventType: 6,
+            additionalInfo: updatedTrip
+        }, (err, savedTripEvent) => {
+            if(err) {
+                res.status(400)
+                throw new Error("Could not create an update trip event")
+            }
+        })
         res.status(200).json(updatedTrip)
     } else {
         res.status(401)

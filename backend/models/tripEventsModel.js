@@ -13,13 +13,16 @@ const tripEventSchema = new Schema({
         required: true
     },
     eventType: {    //registered, created, deleted, updated, cancelled, unregister
-      type: String,
+      type: Number,
       required: true,
+    },
+    additionalInfo: {   //contain the updated data of a trip in the event of update
+        type: Schema.Types.Mixed
     }
   }, {
       timestamps : true
   });
   
-  const TripEvent = mongoose.model("TripEvent", tripEventSchema);
+  const TripEvent = mongoose.model("Trip_Event", tripEventSchema);
   
   module.exports = TripEvent;

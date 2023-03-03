@@ -7,20 +7,17 @@ const userEventSchema = new Schema({
         ref: "User",
         required: true
     },
-    role: {
-        type: Number,
-        required: true,
-        min: 0,
-        max: 2
-    },
-    eventType: {    //register,login, deleted, updated, 
-      type: String,
+    eventType: {    //check enums.txt file for codes
+      type: Number,
       required: true,
+    },
+    additionalInfo: {   //In the case of update tells what new attributes are in place now
+        type: Schema.Types.Mixed,
     }
   }, {
       timestamps : true
   });
   
-  const UserEvent = mongoose.model("UserEvent", userEventSchema);
+  const UserEvent = mongoose.model("User_Event", userEventSchema);
   
   module.exports = UserEvent;
