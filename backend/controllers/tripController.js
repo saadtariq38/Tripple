@@ -177,7 +177,7 @@ const setTrip = asyncHandler( async (req, res) => {
 // @access  Private
 const deleteTrip = asyncHandler( async (req, res) => {
     const { _id, role } = req.user
-    if(role == 1) {
+    if(role == 1 || role == 2) {
         res.status(401)
         throw new Error("User not authorized to delete trip")
     }
@@ -185,25 +185,25 @@ const deleteTrip = asyncHandler( async (req, res) => {
    
     const tripToDelete = await Trip.findById(req.params.id)
     
-    if (tripToDelete.agent.equals(_id)) {       //NOTE .equals ONLY WORKING WHEN THE OBJECT IS OBTAINED THROUGH FindById  *******
-        await tripToDelete.remove()
+    await tripToDelete.remove()
 
-        Trip_Event.create({
-            user: _id,
-            trip: tripToDelete._id,
-            eventType: 7,
-        }, (err, savedTripEvent) => {
-            if(err) {
-                res.status(400)
-                throw new Error("Could not create a delete trip event")
-            }
-        })
-        res.status(200).json({_id : req.params.id})
+    Trip_Event.create({
+        user: _id,
+        trip: tripToDelete._id,
+        eventType: 7,
+    }, (err, savedTripEvent) => {
+        if(err) {
+            res.status(400)
+            throw new Error("Could not create a delete trip event")
+        }
+    })
+    res.status(200).json({_id : req.params.id})
+    // if (tripToDelete.agent.equals(_id)) {       //NOTE .equals ONLY WORKING WHEN THE OBJECT IS OBTAINED THROUGH FindById  *******
         
-    } else {
-        res.status(401)
-        throw new Error("Sorry, only authorized to delete your own trips")
-    }
+    // } else {
+    //     res.status(401)
+    //     throw new Error("Sorry, only authorized to delete your own trips")
+    // }
 
    
     
@@ -294,6 +294,169 @@ const sortTrips = asyncHandler(async (req, res) => {
 
 })
 
+// @desc    Cancel trip with id
+// @route   DELETE /api/trips/cancel/:id
+// @access  Private
+const cancelTrip = asyncHandler( async (req, res) => {
+    const { _id, role } = req.user
+    if(role == 1) {    //if user is a traveller they cannot cancel a trip
+        res.status(401)
+        throw new Error("User not authorized to cancel trip")
+    }
+
+    const tripToCancel = await Trip.findById(req.params.id)
+    
+    if(tripToCancel.agent.equals(_id)) {
+        const cancelledTrip = await Trip.findOneAndUpdate({_id : req.params.id}, {status : "cancelled"})
+    }
+
+    Trip_Event.create({
+        user: _id,
+        trip: tripToCancel._id,
+        eventType: 8,
+    }, (err, savedTripEvent) => {
+        if(err) {
+            res.status(400)
+            throw new Error("Could not create a cancel trip event")
+        }
+    })
+    res.status(200).json({_id : req.params.id})
+
+})
+
+// @desc    Register for trip with id
+// @route   POST /api/trips/register/:id
+// @access  Private
+const registerForTrip = asyncHandler( async (req, res) => {
+    const { _id, role } = req.user
+    if(role == 2) {    //if user is an agent they cannot register for a trip
+        res.status(401)
+        throw new Error("User not authorized to register for a trip")
+    }
+
+
+    const tripToRegister = await Trip.findById(req.params.id)
+    const openSeats = tripToRegister.availableSeats
+
+
+    const isUserRegistered = tripToRegister.registeredUsers.some((userIdInArray) => userIdInArray.equals(_id))
+    if(isUserRegistered) {
+        res.status(400)
+        throw new Error("User already registered for this trip")
+    }
+
+    if(tripToRegister.status == "full"){
+        res.status(400)
+        throw new Error("No open seats available")
+    }
+
+    if(tripToRegister.status == "cancelled"){
+        res.status(400)
+        throw new Error("This trip has been cancelled by the agent. Registration unsuccessful.")
+    }
+
+    if (openSeats == 1) {
+        
+        tripToRegister.registeredUsers.push(_id)
+        tripToRegister.save()
+        const updatedTrip = await Trip.findOneAndUpdate({_id: req.params.id},{ $set: { availableSeats: 0, status: "full" } },)
+
+        Trip_Event.create({
+            user: _id,
+            trip: tripToRegister._id,
+            eventType: 9,
+        }, (err, savedTripEvent) => {
+            if (err) {
+                res.status(400)
+                throw new Error("Could not create a regsiter for trip event")
+            }
+        })
+
+        res.status(200).json({ _id: tripToRegister._id })
+    } else {
+        
+        tripToRegister.registeredUsers.push(_id)    //need .save() for this since it isnt a mongo db func
+        tripToRegister.save()
+        const updatedTrip = await Trip.findOneAndUpdate({_id: req.params.id},{availableSeats: (openSeats-1)})
+
+        Trip_Event.create({
+            user: _id,
+            trip: tripToRegister._id,
+            eventType: 9,
+        }, (err, savedTripEvent) => {
+            if (err) {
+                res.status(400)
+                throw new Error("Could not create a register for trip event")
+            }
+        })
+        
+        res.status(200).json({ _id: tripToRegister._id })
+    }
+
+})
+
+// @desc    Unregister for trip with id
+// @route   POST /api/trips/unregister/:id
+// @access  Private
+
+const unregisterForTrip = asyncHandler( async (req, res) => {
+
+    const { _id, role } = req.user
+    if(role == 2) {    //if user is an agent they cannot unregister for a trip
+        res.status(401)
+        throw new Error("User not authorized to unregister for trip")
+    }
+
+    const tripToUnregister = await Trip.findById(req.params.id)
+    const openSeats = tripToUnregister.availableSeats
+    if(!tripToUnregister) {
+        res.status(404)
+        throw new Error("trip does not exist")
+    }
+
+    if(tripToUnregister.status == "ongoing" || tripToUnregister.status == "completed" || tripToUnregister.status == "cancelled") {
+        res.status(400)
+        throw new Error("Not allowed to unregister from the trip at this point")
+    }
+    
+
+    if (tripToUnregister.availableSeats == 0) {
+
+        const updatedTrip = await Trip.findOneAndUpdate({_id: req.params.id },{ $pull: { registeredUsers: _id }, $set: { status: "available", availableSeats: (openSeats+1) } } )
+
+        Trip_Event.create({
+            user: _id,
+            trip: tripToUnregister._id,
+            eventType: 10,
+        }, (err, savedTripEvent) => {
+            if (err) {
+                res.status(400)
+                throw new Error("Could not create an unregister for trip event")
+            }
+        })
+        res.status(200).json({ _id: tripToUnregister._id })
+        
+    } else {
+        const updatedTrip = await Trip.findOneAndUpdate({_id: req.params.id },{ $pull: { registeredUsers: _id }, $set: { availableSeats: (openSeats+1)} } )
+        Trip_Event.create({
+            user: _id,
+            trip: tripToUnregister._id,
+            eventType: 10,
+        }, (err, savedTripEvent) => {
+            if (err) {
+                res.status(400)
+                throw new Error("Could not create an unregister for trip event")
+            }
+        })
+        res.status(200).json({ _id: tripToUnregister._id })
+    }
+
+    
+
+    
+})
+
+
 
 
 module.exports = {
@@ -304,4 +467,7 @@ module.exports = {
     getUsertrips,
     getOneTrip,
     sortTrips,
+    cancelTrip,
+    registerForTrip,
+    unregisterForTrip,
 }

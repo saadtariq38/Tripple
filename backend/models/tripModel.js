@@ -24,7 +24,7 @@ const tripSchema = new Schema({
         type: [
             {
                 type: Schema.Types.ObjectId,
-                ref: "User_Traveller",
+                ref: "User",
             }
         ],
 
@@ -49,7 +49,7 @@ const tripSchema = new Schema({
         type: Number,
         required: true
     },
-    status: {   //Available, Full, Ongoing, Completed
+    status: {   //Available, Full, Ongoing, Completed, Cancelled
         type: String,
     },
     availableSeats: {

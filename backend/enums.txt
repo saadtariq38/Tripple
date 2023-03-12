@@ -11,3 +11,8 @@ Enums for Trip Events
     Cancelled Trip: 8
     Registered for a Trip: 9
     Unregistered for a Trip: 10
+
+Enums for roles
+    Admin: 0
+    Traveller: 1
+    Agent: 2
