@@ -376,7 +376,7 @@ const registerForTrip = asyncHandler( async (req, res) => {
     } else {
         
         tripToRegister.registeredUsers.push(_id)    //need .save() for this since it isnt a mongo db func
-        tripToRegister.save()
+        await tripToRegister.save()
         const updatedTrip = await Trip.findOneAndUpdate({_id: req.params.id},{availableSeats: (openSeats-1)})
 
         Trip_Event.create({
@@ -456,6 +456,79 @@ const unregisterForTrip = asyncHandler( async (req, res) => {
     
 })
 
+// @desc    add a review with rating and comment for a trip
+// @route   POST /api/trips/review/:id
+// @access  Private
+
+const addTripReview = asyncHandler(async (req,res) => {
+    const { _id, role } = req.user
+    if(role == 2) {    //if user is an agent they cannot add a trip review
+        res.status(401)
+        throw new Error("User not authorized to review a trip")
+    }
+
+    const { rating, comment } = req.body
+    if(!rating) {
+        res.status(400)
+        throw new Error("Cannot review without a rating")
+    }
+
+    const tripToReview = await Trip.findById(req.params.id)
+    if(!tripToReview) {
+        res.status(404)
+        throw new Error("Trip to review not found")
+    }
+
+    var newRating
+    if (comment) {
+        if (tripToReview.numOfRatings > 0) {
+            newRating = ((tripToReview.rating * tripToReview.numOfRatings) + rating) / (tripToReview.numOfRatings + 1) //updating the rating to new average
+            const updatedTrip = await Trip.findOneAndUpdate({_id: req.params.id }, { $push: { comments: { text: comment, user: _id } } }, {$set: {numOfRatings: tripToReview.numOfRatings + 1, rating: newRating} } )
+        } else {
+            const updatedTrip = await Trip.findOneAndUpdate({_id: req.params.id }, { $push: { comments: { text: comment, user: _id } } }, {$set: {numOfRatings: tripToReview.numOfRatings + 1, rating: rating} } )
+        }
+
+        Trip_Event.create({
+            user: _id,
+            trip: tripToReview._id,
+            eventType: 11,
+        }, (err, savedTripEvent) => {
+            if (err) {
+                res.status(400)
+                throw new Error("Could not create a review for trip event")
+            }
+        })
+
+        res.status(200).json({_id: tripToReview._id})
+    } else {
+        if (tripToReview.numOfRatings > 0) {
+            newRating = await ((tripToReview.rating * tripToReview.numOfRatings) + rating) / (tripToReview.numOfRatings + 1) //updating the rating to new average
+            const updatedTrip = await Trip.findOneAndUpdate({_id: req.params.id }, {$set: {numOfRatings: tripToReview.numOfRatings + 1, rating: newRating} } )
+        } else {
+            const updatedTrip = await Trip.findOneAndUpdate({_id: req.params.id }, {$set: {numOfRatings: tripToReview.numOfRatings + 1, rating: rating} } )
+        }
+
+        Trip_Event.create({
+            user: _id,
+            trip: tripToReview._id,
+            eventType: 11,
+        }, (err, savedTripEvent) => {
+            if (err) {
+                res.status(400)
+                throw new Error("Could not create a review for trip event")
+            }
+        })
+
+        res.status(200).json({_id: tripToReview._id})
+    }
+
+
+
+
+
+
+
+})
 
 
 
@@ -470,4 +543,5 @@ module.exports = {
     cancelTrip,
     registerForTrip,
     unregisterForTrip,
+    addTripReview,
 }

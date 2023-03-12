@@ -67,7 +67,8 @@ const tripSchema = new Schema({
     comments: {
         type: [
             {
-                type: String,
+                text: { type: String, required: true },
+                user: { type: Schema.Types.ObjectId, ref: 'User', required: true }
             }
         ],
         default: []
