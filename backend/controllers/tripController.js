@@ -72,11 +72,11 @@ const getUsertrips = asyncHandler(async (req, res) => {
 
    try {
        if(role == 1) {
-           const userTrips = await Trip.find({'registeredUsers.user' : _id})
+        const userTrips = await Trip.find({ registeredUsers: _id });
            res.status(200).json(userTrips)
        } else if(role == 2) {
-            const user_agent = await User_Agent.find({user: _id})
-            const agent_trips = await Trip.find({agent: user_agent._id})
+          //  const user_agent = await User_Agent.find({user: _id})
+            const agent_trips = await Trip.find({agent: _id})
             res.status(200).json(agent_trips)
        }
    } catch (error) {

@@ -126,14 +126,6 @@ const registerUser = asyncHandler(async(req, res) => {
                             }
                         })
                         res.status(201).json({
-                            _id: savedUserTraveller._id,
-                            user: savedUser._id,
-                            name: savedUserTraveller.name,
-                            gender: savedUserTraveller.gender,
-                            age: savedUserTraveller.age,
-                            country: savedUserTraveller.country,
-                            phone_number: savedUserTraveller.phone_number,
-                            passport_number: savedUserTraveller.passport_number,
                             accessToken: accToken,
                             refreshToken: refToken,
                         })
@@ -201,13 +193,7 @@ const registerUser = asyncHandler(async(req, res) => {
                         })
 
                         res.status(201).json({
-                            _id: savedUserAgent._id,
-                            user: savedUser._id,
-                            name: savedUserAgent.name,
-                            description: savedUserAgent.description,
-                            logo: savedUserAgent.logo,
-                            address: savedUserAgent.address,
-                            phone_number: savedUserAgent.phone_number,
+                            
                             accessToken: accToken,
                             refreshToken: refToken,
                         })
@@ -260,14 +246,7 @@ const loginUser = asyncHandler(async(req, res) => {
                 })
 
                 res.json({
-                    _id: user_traveller._id,
-                    user: user_traveller.user,
-                    name: user_traveller.name,
-                    gender: user_traveller.gender,
-                    age: user_traveller.age,
-                    country: user_traveller.country,
-                    phone_number: user_traveller.phone_number,
-                    passport_number: user_traveller.passport_number,
+                   
                     accessToken: accToken,
                     refreshToken: refToken,
 
@@ -294,14 +273,7 @@ const loginUser = asyncHandler(async(req, res) => {
                 })
 
                 res.json({
-                    _id: user_agent._id,
-                    user: user_agent.user,
-                    name: user_agent.name,
-                    phone_number: user_agent.phone_number,
-                    description: user_agent.description,
-                    address: user_agent.address,
-                    logo: user_agent.logo,
-                    numOfActiveTrips: user_agent.numOfActiveTrips,
+                   
                     accessToken: accToken,
                     refreshToken: refToken,
                 })  
