@@ -295,7 +295,7 @@ const sortTrips = asyncHandler(async (req, res) => {
 })
 
 // @desc    Cancel trip with id
-// @route   DELETE /api/trips/cancel/:id
+// @route   PUT /api/trips/cancel/:id
 // @access  Private
 const cancelTrip = asyncHandler( async (req, res) => {
     const { _id, role } = req.user
@@ -460,6 +460,7 @@ const unregisterForTrip = asyncHandler( async (req, res) => {
 // @route   POST /api/trips/review/:id
 // @access  Private
 
+//RATING NOT WORKING
 const addTripReview = asyncHandler(async (req,res) => {
     const { _id, role } = req.user
     if(role == 2) {    //if user is an agent they cannot add a trip review

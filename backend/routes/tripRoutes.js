@@ -6,7 +6,7 @@ const { getTrips, setTrip, updateTrip, deleteTrip , getUsertrips, getOneTrip, so
 router.route('/').get(getTrips).post(protect, setTrip)
 router.route('/sortedTrips').get(sortTrips)
 router.route('/userTrips').get(protect, getUsertrips)
-router.route('/cancel/:id').delete(protect, cancelTrip)
+router.route('/cancel/:id').put(protect, cancelTrip)
 router.route('/register/:id').post(protect, registerForTrip)
 router.route('/unregister/:id').post(protect, unregisterForTrip)
 router.route('/review/:id').post(protect, addTripReview)
