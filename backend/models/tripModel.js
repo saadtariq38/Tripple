@@ -37,7 +37,7 @@ const tripSchema = new Schema({
             }
         ],
     },
-    tripCategory: { //Educational, Recreational, Entertainment 
+    tripCategory: { //educational, recreational, entertainment 
         type: String,
         required: true
     },

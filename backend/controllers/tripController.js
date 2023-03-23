@@ -3,66 +3,43 @@ const User_Agent = require('../models/user_agentModel')
 const Trip_Event = require("../models/tripEventsModel")
 
 const asyncHandler = require('express-async-handler')
+const { rawListeners } = require('../models/userModel')
 
 
 // @desc    Get all trips or filter by category and type according to body data
 // @route   GET /api/trips
 // @access  Public
 const getTrips = asyncHandler(async(req, res) => {
-    let trip = new Array();
+    var trips;
     if (!req.body.tripCategory && !req.body.tripType) {
-       trip = await Trip.find({})
+       trips = await Trip.find({ status: { $ne: "cancelled" }});
     }
-    if (req.body.tripCategory) {
+    else if (req.body.tripType && req.body.tripCategory) {
+        let { tripType, tripCategory } = req.body
+        tripType = tripType.toLowerCase();
+        tripCategory = tripCategory.toLowerCase();
+        trips = await Trip.find({tripCategory: tripCategory, tripType: tripType, status: { $ne: "cancelled" }});
+    } 
+    else if (req.body.tripCategory) {
         let { tripCategory } = req.body
         tripCategory = tripCategory.toLowerCase(); 
-        if(tripCategory === "educational") {
-            trip.push(await Trip.find({tripCategory: tripCategory}))
-        } else if (tripCategory === "recreational") {
-            trip.push(await Trip.find({tripCategory: tripCategory}))
-        }
-        else if(tripCategory === "entertainment"){
-            trip.push(await Trip.find({tripCategory: tripCategory}))
-        }
-       else{
-           res.status(400)
-           throw new Error ('No relevant trips found according to category')
-       }   
-   }
-   if (req.body.tripType) {
-    let { tripType } = req.body
-    tripType = tripType.toLowerCase(); 
-    if(tripType === "local") {
-        trip.push(await Trip.find({tripType: tripType}))
-        } else if (tripType === "international") {
-        trip.push(await Trip.find({tripType: tripType}))
+        trips = await Trip.find({tripCategory: tripCategory, status: { $ne: "cancelled" } })   
     }
-    else{
+    else if (req.body.tripType) {
+        let { tripType } = req.body
+        tripType = tripType.toLowerCase();
+        trips = await Trip.find({tripType: tripType, status: { $ne: "cancelled" } })
+    }
+    else {
         res.status(400)
-        throw new Error ('No relevant trips found according to type')
-    } 
-   } 
-//    else {
-//     res.status(400)
-//     throw new Error("could not find trips")
-//    }
-const unique = [...new Map(trip.map((m) => [trip.name, m])).values()];
+        throw new Error("Could not find trips for the specified body")
+    }
+    
 
-    res.status(200).json({
-        unique
-    })
+
+    res.status(200).json(trips)
 })
 
-
-// const getTrips = asyncHandler( async(req, res) => {
-//     try {
-//         const trips = await Trip.find({})
-//         res.status(200).json(trips)
-//     } catch (error) {
-//         res.status(404)
-//         throw new Error("Fetching trips failed")
-//     }
-// })
 
 // @desc    Get user trips
 // @route   GET /api/trips/userTrips
@@ -93,14 +70,38 @@ const getUsertrips = asyncHandler(async (req, res) => {
 // @access  Public
 const getOneTrip = asyncHandler( async (req, res) => {
     try {
-        const trip = await Trip.findById(req.params.id)
-        res.status(200).json(trip)
+        const trip = await Trip.findById(req.params.id).select('-registeredUsers');
+        res.status(200).json(trip);
     } catch (error) {
         res.status(404)
         throw new Error('Trip not found')
     }
 })
 
+
+// @desc    Get one trip through id beloning to logged in agent
+// @route   GET /api/trips/agent/:id
+// @access  Private
+const getOneAgentTrip = asyncHandler(async (req, res) => {
+    const { _id, role } = req.user
+    if (role == 1) {
+        res.status(403)
+        throw new Error("Only agents can access complete trip info")
+    }
+
+    const trip = await Trip.findById(req.params.id)
+    if (trip) {
+        if (trip.agent.equals(_id)) {
+            res.status(200).json(trip)
+        } else {
+            res.status(404)
+            throw new Error("Not authorized to access other agent's trip info")
+        }
+    } else {
+        res.status(404)
+        throw new Error("Trip not found")
+    }
+})
 
 
 
@@ -480,13 +481,15 @@ const addTripReview = asyncHandler(async (req,res) => {
         throw new Error("Trip to review not found")
     }
 
-    var newRating
+    
     if (comment) {
         if (tripToReview.numOfRatings > 0) {
-            newRating = ((tripToReview.rating * tripToReview.numOfRatings) + rating) / (tripToReview.numOfRatings + 1) //updating the rating to new average
-            const updatedTrip = await Trip.findOneAndUpdate({_id: req.params.id }, { $push: { comments: { text: comment, user: _id } } }, {$set: {numOfRatings: tripToReview.numOfRatings + 1, rating: newRating} } )
+            let newRating = 0
+            newRating = Number(tripToReview.rating * tripToReview.numOfRatings) + Number(rating);
+            newRating = newRating / (tripToReview.numOfRatings + 1);
+            const updatedTrip = await Trip.findOneAndUpdate({_id: req.params.id }, { $push: { comments: { text: comment, user: _id } } , $set: {numOfRatings: tripToReview.numOfRatings + 1, rating: newRating} } )
         } else {
-            const updatedTrip = await Trip.findOneAndUpdate({_id: req.params.id }, { $push: { comments: { text: comment, user: _id } } }, {$set: {numOfRatings: tripToReview.numOfRatings + 1, rating: rating} } )
+            const updatedTrip = await Trip.findOneAndUpdate({_id: req.params.id }, { $push: { comments: { text: comment, user: _id } } , $set: {numOfRatings: tripToReview.numOfRatings + 1, rating: rating} } )
         }
 
         Trip_Event.create({
@@ -503,7 +506,10 @@ const addTripReview = asyncHandler(async (req,res) => {
         res.status(200).json({_id: tripToReview._id})
     } else {
         if (tripToReview.numOfRatings > 0) {
-            newRating = await ((tripToReview.rating * tripToReview.numOfRatings) + rating) / (tripToReview.numOfRatings + 1) //updating the rating to new average
+            let newRating = 0
+            newRating = Number(tripToReview.rating * tripToReview.numOfRatings) + Number(rating);
+            newRating = newRating / (tripToReview.numOfRatings + 1);
+             //updating the rating to new average
             const updatedTrip = await Trip.findOneAndUpdate({_id: req.params.id }, {$set: {numOfRatings: tripToReview.numOfRatings + 1, rating: newRating} } )
         } else {
             const updatedTrip = await Trip.findOneAndUpdate({_id: req.params.id }, {$set: {numOfRatings: tripToReview.numOfRatings + 1, rating: rating} } )
@@ -545,4 +551,5 @@ module.exports = {
     registerForTrip,
     unregisterForTrip,
     addTripReview,
+    getOneAgentTrip,
 }
