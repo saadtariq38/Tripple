@@ -5,6 +5,7 @@ import { Suspense } from 'react';
 
 async function TripCategoryDisplay({params: { tripCat }}) {
 
+    tripCat = tripCat === 'all' ? '' : tripCat;
     const tripData = getCatTrips(tripCat);
 
   return (

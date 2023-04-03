@@ -9,36 +9,67 @@ const { rawListeners } = require('../models/userModel')
 // @desc    Get all trips or filter by category and type according to body data
 // @route   GET /api/trips
 // @access  Public
-const getTrips = asyncHandler(async(req, res) => {
-    var trips;
-    if (!req.body.tripCategory && !req.body.tripType) {
-       trips = await Trip.find({ status: { $ne: "cancelled" }});
+const getTrips = asyncHandler(async (req, res) => {
+    let trips;
+    const tripCategory = req.query.tripCategory?.toLowerCase();
+    const tripType = req.query.tripType?.toLowerCase();
+  
+    if (!tripCategory && !tripType) {
+      trips = await Trip.find({ status: { $ne: "cancelled" } });
+    } else if (tripType && tripCategory) {
+      trips = await Trip.find({
+        tripCategory: tripCategory,
+        tripType: tripType,
+        status: { $ne: "cancelled" },
+      });
+    } else if (tripCategory) {
+      trips = await Trip.find({
+        tripCategory: tripCategory,
+        status: { $ne: "cancelled" },
+      });
+    } else if (tripType) {
+      trips = await Trip.find({
+        tripType: tripType,
+        status: { $ne: "cancelled" },
+      });
+    } else {
+      res.status(400);
+      throw new Error("Could not find trips for the specified query parameters");
     }
-    else if (req.body.tripType && req.body.tripCategory) {
-        let { tripType, tripCategory } = req.body
-        tripType = tripType.toLowerCase();
-        tripCategory = tripCategory.toLowerCase();
-        trips = await Trip.find({tripCategory: tripCategory, tripType: tripType, status: { $ne: "cancelled" }});
-    } 
-    else if (req.body.tripCategory) {
-        let { tripCategory } = req.body
-        tripCategory = tripCategory.toLowerCase(); 
-        trips = await Trip.find({tripCategory: tripCategory, status: { $ne: "cancelled" } })   
-    }
-    else if (req.body.tripType) {
-        let { tripType } = req.body
-        tripType = tripType.toLowerCase();
-        trips = await Trip.find({tripType: tripType, status: { $ne: "cancelled" } })
-    }
-    else {
-        res.status(400)
-        throw new Error("Could not find trips for the specified body")
-    }
+  
+    res.status(200).json(trips);
+  });
+  
+// const getTrips = asyncHandler(async(req, res) => {
+//     var trips;
+//     if (!req.body.tripCategory && !req.body.tripType) {
+//        trips = await Trip.find({ status: { $ne: "cancelled" }});
+//     }
+//     else if (req.body.tripType && req.body.tripCategory) {
+//         let { tripType, tripCategory } = req.body
+//         tripType = tripType.toLowerCase();
+//         tripCategory = tripCategory.toLowerCase();
+//         trips = await Trip.find({tripCategory: tripCategory, tripType: tripType, status: { $ne: "cancelled" }});
+//     } 
+//     else if (req.body.tripCategory) {
+//         let { tripCategory } = req.body
+//         tripCategory = tripCategory.toLowerCase(); 
+//         trips = await Trip.find({tripCategory: tripCategory, status: { $ne: "cancelled" } })   
+//     }
+//     else if (req.body.tripType) {
+//         let { tripType } = req.body
+//         tripType = tripType.toLowerCase();
+//         trips = await Trip.find({tripType: tripType, status: { $ne: "cancelled" } })
+//     }
+//     else {
+//         res.status(400)
+//         throw new Error("Could not find trips for the specified body")
+//     }
     
 
 
-    res.status(200).json(trips)
-})
+//     res.status(200).json(trips)
+// })
 
 
 // @desc    Get user trips
