@@ -12,7 +12,6 @@ export default function Home() {
 
 
       <main>
-        
           <section class="bg-center bg-no-repeat bg-[url('https://source.unsplash.com/1600x1600/?travelling')] bg-gray-700 bg-blend-multiply">
               <div class="px-4 mx-auto max-w-screen-xl text-center py-24 lg:py-30">
                   <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl">Travelling made easy</h1>
@@ -33,8 +32,6 @@ export default function Home() {
                   </a>
               </div>
           </section>
-
-
 
           <div className="grid grid-cols-4 md:grid-cols-4 gap-4 mt-24 flex justify-center">
               <div className="grid gap-4">
@@ -82,9 +79,6 @@ export default function Home() {
                   </div>
               </div>
           </div>
-
-          
-
 
       </main >
   )

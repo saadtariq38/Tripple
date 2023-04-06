@@ -8,6 +8,7 @@ import {
   Button,
   IconButton,
 } from "@material-tailwind/react";
+import Link from "next/link";
  
 export default function NavbarComponent() {
   const [openNav, setOpenNav] = useState(false);
@@ -76,12 +77,16 @@ export default function NavbarComponent() {
           <span className="text-2xl text-blue-500 font-bold">Tripple</span>
         </Typography>
         <div className="hidden lg:block">{navList}</div>
-        <Button variant="gradient" size="sm" className="hidden lg:inline-block ml-96">
-          <span>Sign Up</span>
-        </Button>
-        <Button variant="gradient" size="sm" className="hidden lg:inline-block ml-2">
-          <span>Login</span>
-        </Button>
+        <Link href='/register'>
+          <Button variant="gradient" size="sm" className="hidden lg:inline-block ml-96">
+            <span>Register</span>
+          </Button>
+        </Link>
+        <Link href='/login'>
+          <Button variant="gradient" size="sm" className="hidden lg:inline-block ml-2">
+            <span>Login</span>
+          </Button>
+        </Link>
         <IconButton
           variant="text"
           className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"

@@ -1,7 +1,8 @@
 
 
-export default function MyGallery() {
+export default function Gallery() {
   return (
-    <></>
+    <>
+    </>
   );
 };
