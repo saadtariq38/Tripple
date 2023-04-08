@@ -18,13 +18,13 @@ export default function Home() {
                   <p class="mb-8 text-lg font-normal text-gray-300 lg:text-xl sm:px-16 lg:px-48">Choose from a wide selection of verified trips, according to your trip preference.</p>
                   <div class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
                       <a class="inline-flex justify-center hover:text-gray-900 items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg border border-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-400">
-                        <Link href="/recreational">Recreational</Link>
+                        <Link href="/trips/recreational">Recreational</Link>
                       </a>
                       <a class="inline-flex justify-center hover:text-gray-900 items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg border border-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-400">
-                        <Link href="/educational">Educational</Link>
+                        <Link href="/trips/educational">Educational</Link>
                       </a>
                       <a class="inline-flex justify-center hover:text-gray-900 items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg border border-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-400">
-                      <Link href="/entertainment">Entertainment</Link>
+                      <Link href="/trips/entertainment">Entertainment</Link>
                       </a>
                   </div>
                   <a class="inline-flex justify-center hover:text-gray-900 items-center py-3 px-5 mt-4 text-base font-medium text-center text-white rounded-lg border border-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-400">

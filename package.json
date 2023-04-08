@@ -8,8 +8,6 @@
     "start": "node backend/server.js",
     "server": "nodemon backend/server.js",
     "dev": "concurrently \"nodemon backend/server.js\" \"cd tripple-next && npm run dev\""
-    
-
   },
   "author": "saad tariq",
   "license": "ISC",
@@ -17,6 +15,7 @@
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
     "concurrently": "^8.0.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "env": "^0.0.2",
     "express": "^4.18.2",

@@ -2,6 +2,7 @@ import Link from 'next/link'
 import getCatTrips from '@/lib/getCatTrips'
 import TripList from './components/TripList';
 import { Suspense } from 'react';
+import LoadingSpinner from './loading';
 
 async function TripCategoryDisplay({params: { tripCat }}) {
 
@@ -14,7 +15,7 @@ async function TripCategoryDisplay({params: { tripCat }}) {
         <br />
         <Link href ='/'>Go to home</Link>
         <br />
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<LoadingSpinner/>} >
             <TripList promise={tripData} />
         </Suspense>
     </>
