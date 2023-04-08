@@ -5,13 +5,28 @@ const User_Event = require("../models/userEventsModel")
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { generateAccessToken, generateRefreshToken } = require('../helper/tokenHelpers')
-const tokenList = {
-    refreshToken: "",
-    accessToken: "",
-}
+// const tokenList = {
+//     refreshToken: "",
+//     accessToken: "",
+// }
 
 
 const asyncHandler = require('express-async-handler')
+
+// @desc    Get user info
+// @route   POST /api/user/token
+// @access  Public
+const expiredToken = asyncHandler(async(req,res) => {
+    const { refreshToken } = req.body
+    const refreshDecoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET)
+    const { id, role } = refreshDecoded
+
+    const newAccessToken = generateAccessToken(id, role)
+    console.log("new access token created")
+
+    res.status(200).json(newAccessToken)
+    
+})
 
 // @desc    Get user info
 // @route   GET /api/user/me
@@ -113,8 +128,9 @@ const registerUser = asyncHandler(async(req, res) => {
                     } else {
                         const accToken = generateAccessToken(savedUser._id, role)
                         const refToken = generateRefreshToken(savedUser._id, role)
-                        tokenList.refreshToken = refToken
-                        tokenList.accessToken = accToken
+                        // localStorage.setItem('accessToken', accToken)
+                        // localStorage.setItem('refreshToken', refToken)
+
 
                         User_Event.create({
                             user: savedUser._id,
@@ -179,8 +195,8 @@ const registerUser = asyncHandler(async(req, res) => {
                     } else {
                         const accToken = generateAccessToken(savedUser._id, role)
                         const refToken = generateRefreshToken(savedUser._id, role)
-                        tokenList.refreshToken = refToken
-                        tokenList.accessToken = accToken
+                        // localStorage.setItem('accessToken', accToken)
+                        // localStorage.setItem('refreshToken', refToken)
 
                         User_Event.create({
                             user: savedUser._id,
@@ -232,8 +248,8 @@ const loginUser = asyncHandler(async(req, res) => {
                 const user_traveller = await User_Traveller.findOne({ user: _id })
                 const accToken = generateAccessToken( _id, role )
                 const refToken = generateRefreshToken( _id, role )
-                tokenList.refreshToken = refToken
-                tokenList.accessToken = accToken
+                // localStorage.setItem('accessToken', accToken)
+                // localStorage.setItem('refreshToken', refToken)
 
                 User_Event.create({
                     user: _id,
@@ -259,8 +275,8 @@ const loginUser = asyncHandler(async(req, res) => {
                 const user_agent = await User_Agent.findOne({ user: _id })
                 const accToken = generateAccessToken( _id, role )
                 const refToken = generateRefreshToken( _id, role)
-                tokenList.refreshToken = refToken
-                tokenList.accessToken = accToken
+                // localStorage.setItem('accessToken', accToken)
+                // localStorage.setItem('refreshToken', refToken)
 
                 User_Event.create({
                     user: _id,
@@ -410,6 +426,6 @@ module.exports = {
   loginUser,
   getAllAgents,
   getAllTravellers,
-  tokenList,
+  expiredToken,
   
 }

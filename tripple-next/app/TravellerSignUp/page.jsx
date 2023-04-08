@@ -32,7 +32,7 @@ export default function SignUpTravellerPage() {
 
       const [isFormValid, setIsFormValid] = useState(null);
       const [accessToken, setAccessToken] = useState(null);
-      const [refreshToken, setRefreshToken] = useState(null);
+
 
       const handleChange = (event) => {
         const { name, value } = event.target;
@@ -127,43 +127,35 @@ export default function SignUpTravellerPage() {
         console.log(formErrors)
         event.preventDefault();
         if (isFormValid) {
-            console.log("hi")
+            console.log("hi2")
             // get the form data
-            const form = event.target;
-            const formData = new FormData();
+            // Remove confirmPassword field from formData
+          const { confirmPassword, ...dataWithoutConfirmPassword } = formData;
 
-            // get all fields and values as an array
-            const formEntries = [...new FormData(form).entries()];
+          // Add role field with a value of 1
+          const dataWithRole = { ...dataWithoutConfirmPassword, role: 1 };
 
-            // filter out the confirm_password field
-            const filteredEntries = formEntries.filter(([name, value]) => name !== 'confirmPassword');
-
-            // add the remaining fields and values to the new FormData object
-            filteredEntries.forEach(([name, value]) => {
-                formData.append(name, value);
-            });
-
-            // add the role attribute with a value of 1 to the form data
-            formData.append('role', '1');
+          // Send POST request with form data as x-www-url-encoded data in the request body
+            
 
             console.log(formData)
 
             // make the API request
             const response = await fetch('http://localhost:5000/api/user/register', {
                 method: 'POST',
-                body: JSON.stringify(formData),
                 headers: {
-                    'Content-Type': 'application/json'
-                }
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams(dataWithRole).toString()
             });
 
             // check if the request was successful
             if (response.ok) {
                 // get the access and refresh tokens from the response
-                const data = await response.json();
-                setAccessToken(data.accessToken);
-                setRefreshToken(data.refreshToken);
-                console.log(data)
+              const data = await response.json();
+              // store the tokens in the local storage
+              localStorage.setItem('accessToken', data.accessToken);
+              localStorage.setItem('refreshToken', data.refreshToken);
 
                 // redirect the user to the dashboard or homepage
                 window.location.href = '/';
