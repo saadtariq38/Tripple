@@ -19,19 +19,10 @@ export default function SignUpTravellerPage() {
       });
 
       const [formErrors, setFormErrors] = useState({
-        // email: "",
-        // password: "",
-        // confirmPassword: "",
-        // name: "",
-        // country: "",
-        // passport_number: "",
-        // age: "",
-        // gender: "",
-        // phone: "",
       });
 
       const [isFormValid, setIsFormValid] = useState(null);
-      const [accessToken, setAccessToken] = useState(null);
+
 
 
       const handleChange = (event) => {
@@ -150,21 +141,21 @@ export default function SignUpTravellerPage() {
             });
 
             // check if the request was successful
-            if (response.ok) {
-                // get the access and refresh tokens from the response
+          if (response.ok) {
+              // get the access and refresh tokens from the response
               const data = await response.json();
               // store the tokens in the local storage
               localStorage.setItem('accessToken', data.accessToken);
               localStorage.setItem('refreshToken', data.refreshToken);
 
-                // redirect the user to the dashboard or homepage
-                window.location.href = '/';
-            } else {
-                // handle the error
-                console.error('API request failed');
-                const errorData = await response.json();
-                setFormErrors(errorData);
-            }
+              // redirect the user to the dashboard or homepage
+              window.location.href = '/';
+          } else {
+              // handle the error
+              console.error('API request failed');
+              const errorData = await response.json();
+              setFormErrors(errorData);
+          }
         }
     };
 
@@ -187,33 +178,38 @@ export default function SignUpTravellerPage() {
                 <span className={` ${formErrors.password ? 'text-sm text-red-500' : 'hidden'}`}>{formErrors.password}</span>
             </div>
             <div className="relative z-0 w-full mb-6 group">
-                <input type="password" id="confirm_password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                <input type="password" id="confirm_password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${formErrors.confirmPassword ? 'border-red-500' : ''}`} placeholder=" " required />
                 <label htmlFor="confirm_password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Confirm password</label>
+                <span className={` ${formErrors.confirmPassword ? 'text-sm text-red-500' : 'hidden'}`}>{formErrors.confirmPassword}</span>
             </div>
             <div className="grid md:grid-cols-2 md:gap-6">
                 <div className="relative z-0 w-full mb-6 group">
-                    <input type="text" name="name" id="name" value={formData.name} onChange={handleChange} className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                    <input type="text" name="name" id="name" value={formData.name} onChange={handleChange} className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${formErrors.name ? 'border-red-500' : ''}`} placeholder=" " required />
                     <label htmlFor="name" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Name</label>
+                    <span className={` ${formErrors.name ? 'text-sm text-red-500' : 'hidden'}`}>{formErrors.name}</span>
                 </div>
                 <div className="relative z-0 w-full mb-6 group">
-                    <input type="text" name="country" id="country" value={formData.country} onChange={handleChange} className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                    <input type="text" name="country" id="country" value={formData.country} onChange={handleChange} className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${formErrors.country ? 'border-red-500' : ''}`} placeholder=" " required />
                     <label htmlFor="country" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Country</label>
+                    <span className={` ${formErrors.country ? 'text-sm text-red-500' : 'hidden'}`}>{formErrors.country}</span>
                 </div>
             </div>
             <div className="grid md:grid-cols-2 md:gap-6">
                 <div className="relative z-0 w-full mb-6 group">
                     <input type="tel" pattern="[0-9]{4}[0-9]{7}" name="phone_number" id="phone_number" value={formData.phone_number} onChange={handleChange} className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-                    <label htmlFor="phone_number" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Phone number (123-456-7890)</label>
+                    <label htmlFor="phone_number" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Phone number (03xx-xxxxxxx)</label>
                 </div>
                 <div className="relative z-0 w-full mb-6 group">
-                    <input type="text" name="gender" id="gender" value={formData.gender} onChange={handleChange} className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                    <input type="text" name="gender" id="gender" value={formData.gender} onChange={handleChange} className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${formErrors.gender ? 'border-red-500' : ''}`} placeholder=" " required />
                     <label htmlFor="gender" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Gender</label>
+                    <span className={` ${formErrors.gender ? 'text-sm text-red-500' : 'hidden'}`}>{formErrors.gender}</span>
                 </div>
             </div>
             <div className="grid md:grid-cols-2 md:gap-6">
                 <div className="relative z-0 w-full mb-6 group">
-                    <input type="text"  name="age" id="age" value={formData.age} onChange={handleChange} className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                    <input type="text"  name="age" id="age" value={formData.age} onChange={handleChange} className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${formErrors.age ? 'border-red-500' : ''}`} placeholder=" " required />
                     <label htmlFor="age" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Age</label>
+                    <span className={` ${formErrors.age ? 'text-sm text-red-500' : 'hidden'}`}>{formErrors.age}</span>
                 </div>
                 <div className="relative z-0 w-full mb-6 group">
                     <input type="text" name="passport_number" id="passport_number" value={formData.passport_number} onChange={handleChange} className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
