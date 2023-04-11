@@ -12,22 +12,22 @@ export default function Home() {
 
 
       <main>
-          <section class="bg-center bg-no-repeat bg-[url('https://source.unsplash.com/1600x1600/?travelling')] bg-gray-700 bg-blend-multiply">
-              <div class="px-4 mx-auto max-w-screen-xl text-center py-24 lg:py-30">
-                  <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl">Travelling made easy</h1>
-                  <p class="mb-8 text-lg font-normal text-gray-300 lg:text-xl sm:px-16 lg:px-48">Choose from a wide selection of verified trips, according to your trip preference.</p>
-                  <div class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
-                      <a class="inline-flex justify-center hover:text-gray-900 items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg border border-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-400">
+          <section className="bg-center bg-no-repeat bg-[url('https://source.unsplash.com/1600x1600/?travelling')] bg-gray-700 bg-blend-multiply">
+              <div className="px-4 mx-auto max-w-screen-xl text-center py-24 lg:py-30">
+                  <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl">Travelling made easy</h1>
+                  <p className="mb-8 text-lg font-normal text-gray-300 lg:text-xl sm:px-16 lg:px-48">Choose from a wide selection of verified trips, according to your trip preference.</p>
+                  <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
+                      <a className="inline-flex justify-center hover:text-gray-900 items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg border border-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-400">
                         <Link href="/trips/recreational">Recreational</Link>
                       </a>
-                      <a class="inline-flex justify-center hover:text-gray-900 items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg border border-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-400">
+                      <a className="inline-flex justify-center hover:text-gray-900 items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg border border-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-400">
                         <Link href="/trips/educational">Educational</Link>
                       </a>
-                      <a class="inline-flex justify-center hover:text-gray-900 items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg border border-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-400">
+                      <a className="inline-flex justify-center hover:text-gray-900 items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg border border-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-400">
                       <Link href="/trips/entertainment">Entertainment</Link>
                       </a>
                   </div>
-                  <a class="inline-flex justify-center hover:text-gray-900 items-center py-3 px-5 mt-4 text-base font-medium text-center text-white rounded-lg border border-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-400">
+                  <a className="inline-flex justify-center hover:text-gray-900 items-center py-3 px-5 mt-4 text-base font-medium text-center text-white rounded-lg border border-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-400">
                     <Link href="/all">All trips</Link>
                   </a>
               </div>
