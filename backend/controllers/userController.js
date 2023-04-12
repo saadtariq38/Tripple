@@ -242,7 +242,7 @@ const loginUser = asyncHandler(async(req, res) => {
     
 
     //user exists and passwords match condition
-    if(user && (await bcrypt.compare(password, user.password))) {
+    if(user && (await bcrypt.compare(password, user.password)) && user.role == role) {
         if(role == 1) {   //condition for User_Traveller
             try {
                 const user_traveller = await User_Traveller.findOne({ user: _id })
@@ -298,7 +298,7 @@ const loginUser = asyncHandler(async(req, res) => {
             }
         }
     } else {
-        res.status(400)
+        res.status(401)
         throw new Error("Invalid user data")
     }
 

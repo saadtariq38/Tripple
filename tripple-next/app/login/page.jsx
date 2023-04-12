@@ -10,6 +10,9 @@ export default function LoginForm() {
         password: "",
     });
 
+    const [formErrors, setFormErrors] = useState({
+    });
+
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData((prevState) => ({
@@ -27,6 +30,7 @@ export default function LoginForm() {
         const formDataWithRole = { ...formData, role: role }
         console.log(formDataWithRole)
 
+        
         const response = await fetch('http://localhost:5000/api/user/login', {
             method: 'POST',
             headers: {
@@ -37,6 +41,7 @@ export default function LoginForm() {
 
         if (response.ok) {
             // get the access and refresh tokens from the response
+            
             const data = await response.json();
             // store the tokens in the local storage
             localStorage.setItem('accessToken', data.accessToken);
@@ -44,10 +49,15 @@ export default function LoginForm() {
 
             // redirect the user to the dashboard or homepage
             window.location.href = '/';
+           
         } else {
             // handle the error
             console.error('API request failed');
             const errorData = await response.json();
+            // if(response.status === 401){
+            //     const invalidCredentials = "Incorrect credentials. Please try again"
+            //     setFormErrors(invalidCredentials)
+            // }
             setFormErrors(errorData);
         }
     }
@@ -66,11 +76,14 @@ export default function LoginForm() {
                       <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                           <div>
                               <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                              <input type="email" name="email" id="email" onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@example.com" required="" />
+                              <input type="email" name="email" id="email" onChange={handleChange} className={`${formErrors ? 'border-red-500' : 'border-gray-300'
+                                  } bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`} placeholder="name@example.com" required="" />
                           </div>
                           <div>
                               <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                              <input type="password" name="password" id="password" placeholder="••••••••" onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="" />
+                              <input type="password" name="password" id="password" placeholder="••••••••" onChange={handleChange} className={`${formErrors ? 'border-red-500' : 'border-gray-300'
+                                  } bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`} required="" />
+                                  {formErrors && <span className="text-red-500 text-sm">Incorrect credentials. Please try again</span>}
                           </div>
 
                           <label htmlFor="role" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select your Role</label>
