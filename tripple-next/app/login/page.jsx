@@ -47,6 +47,7 @@ export default function LoginForm() {
             localStorage.setItem('accessToken', data.accessToken);
             localStorage.setItem('refreshToken', data.refreshToken);
 
+            setFormErrors(null)
             // redirect the user to the dashboard or homepage
             window.location.href = '/';
            

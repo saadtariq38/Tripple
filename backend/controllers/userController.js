@@ -13,6 +13,21 @@ const { generateAccessToken, generateRefreshToken } = require('../helper/tokenHe
 
 const asyncHandler = require('express-async-handler')
 
+// @desc    Get agent user info
+// @route   POST /api/user/token
+// @access  Public
+const getOneAgentUser = asyncHandler( async (req, res) => {
+    const agentData = await User_Agent.findById(req.params.id, 'user')
+    console.log(agentData)
+    if(!agentData) {
+        res.status(500)
+        throw new Error("could not get agent data")
+    }
+
+    res.status(200).json(agentData)
+
+})
+
 // @desc    Get user info
 // @route   POST /api/user/token
 // @access  Public
@@ -427,5 +442,6 @@ module.exports = {
   getAllAgents,
   getAllTravellers,
   expiredToken,
+  getOneAgentUser,
   
 }

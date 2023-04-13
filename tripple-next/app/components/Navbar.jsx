@@ -9,9 +9,16 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import Link from "next/link";
- 
+
 export default function NavbarComponent() {
+
+
+  const logout = () => {
+    localStorage.clear()
+    setLoggedIn(false)
+  }
   const [openNav, setOpenNav] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
  
   useEffect(() => {
     window.addEventListener(
@@ -65,6 +72,17 @@ export default function NavbarComponent() {
     </ul>
   );
  
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Check if localStorage is available on the client-side
+      if (localStorage.getItem("accessToken") === null) {
+        setLoggedIn(false)
+      } else {
+        setLoggedIn(true)
+      }
+    }
+  }, []); // Run this effect only once on mount
+
   return (
     <Navbar className="mx-auto max-w-screen-xl py-2 px-4 lg:px-8 lg:py-4 w-full">
       <div className="container mx-auto flex items-center text-blue-gray-900">
@@ -77,16 +95,28 @@ export default function NavbarComponent() {
           <span className="text-2xl text-blue-500 font-bold">Tripple</span>
         </Typography>
         <div className="hidden lg:block">{navList}</div>
-        <Link href='/register'>
-          <Button variant="gradient" size="sm" className="hidden lg:inline-block ml-96">
-            <span>Register</span>
-          </Button>
-        </Link>
-        <Link href='/login'>
-          <Button variant="gradient" size="sm" className="hidden lg:inline-block ml-2">
-            <span>Login</span>
-          </Button>
-        </Link>
+        {!loggedIn ? (
+          <>
+            <Link href='/register'>
+              <Button variant="gradient" size="sm" className="hidden lg:inline-block ml-96">
+                <span>Register</span>
+              </Button>
+            </Link >
+            <Link href='/login'>
+              <Button variant="gradient" size="sm" className="hidden lg:inline-block ml-2">
+                <span>Login</span>
+              </Button>
+            </Link>
+          </>
+        ) : (
+          <Link href='/'>
+            <Button onClick={logout} variant="gradient" size="sm" className="hidden lg:inline-block ml-96">
+              <span>Log out</span>
+            </Button>
+          </Link>
+        )}
+        
+        
         <IconButton
           variant="text"
           className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
@@ -128,9 +158,7 @@ export default function NavbarComponent() {
       <MobileNav open={openNav}>
         <div className="container mx-auto">
           {navList}
-          <Button variant="gradient" size="sm" fullWidth className="mb-2">
-            <span>Buy Now</span>
-          </Button>
+          
         </div>
       </MobileNav>
     </Navbar>
