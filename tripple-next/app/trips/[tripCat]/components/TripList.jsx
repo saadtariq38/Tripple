@@ -18,6 +18,15 @@ export default async function TripList({ promise }) {
                     numOfRatings={trip.numOfRatings}
                     destination={trip.destination}
                     availableSeats={trip.availableSeats}
+                    agent={trip.agent}
+                    name={trip.name}
+                    duration={trip.duration}
+                    tripCategory={trip.tripCategory}
+                    tripType={trip.tripType}
+                    status={trip.status}
+                    comments={trip.comments}
+                    startingLocation={trip.startingLocation}
+                    itinerary={trip.itinerary}
                 />
                 {/* agentName = data <= prop to be passed in Trip
                 <h2>{trip.name}</h2>
