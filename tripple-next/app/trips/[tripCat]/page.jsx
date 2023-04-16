@@ -11,10 +11,7 @@ async function TripCategoryDisplay({params: { tripCat }}) {
 
   return (
     <>
-        <h1>{tripCat.charAt(0).toUpperCase() + tripCat.slice(1)} trips</h1>
-        <br />
-        <Link href ='/'>Go to home</Link>
-        <br />
+        
         <Suspense fallback={<LoadingSpinner/>} >
             <TripList promise={tripData} />
         </Suspense>

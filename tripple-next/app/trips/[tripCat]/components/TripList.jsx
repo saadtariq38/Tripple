@@ -1,5 +1,5 @@
 import Trip from "./Trip"
-import getAgencyName from "@/lib/getAgencyName"
+
 
 export default async function TripList({ promise }) {
     const trips = await promise

@@ -11,6 +11,23 @@ export default function TripDetailsPage() {
     
 
   return (
-    <TripDetail />
+    <TripDetail
+      description={storedTrip.description}
+      images={storedTrip.images}
+      cost={storedTrip.cost}
+      rating={storedTrip.rating}
+      numOfRatings={storedTrip.numOfRatings}
+      destination={storedTrip.destination}
+      availableSeats={storedTrip.availableSeats}
+      agent={storedTrip.agent}
+      name={storedTrip.name}
+      duration={storedTrip.duration}
+      tripCategory={storedTrip.tripCategory}
+      tripType={storedTrip.tripType}
+      status={storedTrip.stastoredTrip}
+      comments={storedTrip.comments}
+      startingLocation={storedTrip.startingLocation}
+      itinerary={storedTrip.itinerary}
+    />
   )
 }

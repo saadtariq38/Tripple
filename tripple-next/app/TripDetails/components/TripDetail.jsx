@@ -13,19 +13,25 @@ import {
   BanknotesIcon,
   StarIcon,
   HeartIcon,
-  WifiIcon,
-  HomeIcon,
-  TvIcon,
   FireIcon,
+  UsersIcon,
+  ClockIcon,
+  ChevronDoubleRightIcon,
+  GlobeAsiaAustraliaIcon,
+
 } from "@heroicons/react/24/solid";
 
-export default function TripDetail() {
+
+
+export default function TripDetail( props ) {
   return (
-    <Card className="w-full max-w-[26rem] shadow-lg">
+    <div className="flex justify-center items-center my-20">
+      <div className="mr-20">
+      <Card className="w-full max-w-[26rem] shadow-lg">
       <CardHeader floated={false} color="blue-gray">
         <img
           src="/trip1.jpg"
-          alt="ui/ux review check"
+          alt="img here"
         />
         <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60 " />
         <IconButton
@@ -40,51 +46,46 @@ export default function TripDetail() {
       <CardBody>
         <div className="mb-3 flex items-center justify-between">
           <Typography variant="h5" color="blue-gray" className="font-medium">
-            Wooden House, Florida
+            {props.name}
           </Typography>
           <Typography
             color="blue-gray"
             className="flex items-center gap-1.5 font-normal"
           >
             <StarIcon className="-mt-0.5 h-5 w-5 text-yellow-700" />
-            5.0
+            {`${props.rating}(${props.numOfRatings})`}
           </Typography>
         </div>
         <Typography color="gray">
-          Enter a freshly updated and thoughtfully furnished peaceful home
-          surrounded by ancient trees, stone walls, and open meadows.
+          {props.description}
         </Typography>
-        <div className="group mt-8 inline-flex flex-wrap items-center gap-3">
-          <Tooltip content="$129 per night">
+        <div className="group mt-8 inline-flex flex-wrap items-center gap-8">
+          <Tooltip content={`PKR ${props.cost} / head`}>
             <span className="cursor-pointer rounded-full border border-blue-500/5 bg-blue-500/5 p-3 text-blue-500 transition-colors hover:border-blue-500/10 hover:bg-blue-500/10 hover:!opacity-100 group-hover:opacity-70">
               <BanknotesIcon className="h-5 w-5" />
             </span>
           </Tooltip>
-          <Tooltip content="Free wifi">
-            <span className="cursor-pointer rounded-full border border-blue-500/5 bg-blue-500/5 p-3 text-blue-500 transition-colors hover:border-blue-500/10 hover:bg-blue-500/10 hover:!opacity-100 group-hover:opacity-70">
-              <WifiIcon className="h-5 w-5" />
+          <Tooltip content={`${props.availableSeats} available slot(s)`}>
+            <span className={`cursor-pointer rounded-full border ${props.availableSeats > 0 ? 'border-blue-500/5 bg-blue-500/5 p-3 text-blue-500 transition-colors hover:border-blue-500/10 hover:bg-blue-500/10 hover:!opacity-100 group-hover:opacity-70' : 'border-red-500/5 bg-red-500/5  p-3 text-red-500 transition-colors hover:border-red-500/10 hover:bg-red-500/10 hover:!opacity-100 group-hover:opacity-70'}`}>
+              <UsersIcon className="h-5 w-5" />
             </span>
           </Tooltip>
-          <Tooltip content="2 bedrooms">
+          <Tooltip content={`${props.duration} days`}>
             <span className="cursor-pointer rounded-full border border-blue-500/5 bg-blue-500/5 p-3 text-blue-500 transition-colors hover:border-blue-500/10 hover:bg-blue-500/10 hover:!opacity-100 group-hover:opacity-70">
-              <HomeIcon className="h-5 w-5" />
+              <ClockIcon className="h-5 w-5" />
             </span>
           </Tooltip>
-          <Tooltip content={`65" HDTV`}>
+          <Tooltip content={`Starting Location: ${props.startingLocation}`}>
             <span className="cursor-pointer rounded-full border border-blue-500/5 bg-blue-500/5 p-3 text-blue-500 transition-colors hover:border-blue-500/10 hover:bg-blue-500/10 hover:!opacity-100 group-hover:opacity-70">
-              <TvIcon className="h-5 w-5" />
+              <ChevronDoubleRightIcon className="h-5 w-5" />
             </span>
           </Tooltip>
-          <Tooltip content="Fire alert">
+          <Tooltip content={`Destination: ${props.destination}`}>
             <span className="cursor-pointer rounded-full border border-blue-500/5 bg-blue-500/5 p-3 text-blue-500 transition-colors hover:border-blue-500/10 hover:bg-blue-500/10 hover:!opacity-100 group-hover:opacity-70">
-              <FireIcon className="h-5 w-5" />
+              <GlobeAsiaAustraliaIcon className="h-5 w-5" />
             </span>
           </Tooltip>
-          <Tooltip content="And +20 more">
-            <span className="cursor-pointer rounded-full border border-blue-500/5 bg-blue-500/5 p-3 text-blue-500 transition-colors hover:border-blue-500/10 hover:bg-blue-500/10 hover:!opacity-100 group-hover:opacity-70">
-              +20
-            </span>
-          </Tooltip>
+          
         </div>
       </CardBody>
       <CardFooter className="pt-3">
@@ -93,6 +94,24 @@ export default function TripDetail() {
         </Button>
       </CardFooter>
     </Card>
+      </div>
+      <div className="flex-col flex justify-center items-center">
+
+
+        <p class="max-w-lg text-3xl font-semibold leading-normal text-gray-900 dark:text-white">{props.itinerary}</p>
+        {props.comments.map((comment) => {
+          return (
+            <div className="mt-6">
+              <p className="my-1">{comment.text}</p>
+              <p className="my-1">{comment.user}</p>
+            </div>
+        
+         )})}
+
+
+      </div>
+    </div>
+    
   );
 }
 
