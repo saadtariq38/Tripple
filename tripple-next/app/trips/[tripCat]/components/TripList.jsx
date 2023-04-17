@@ -11,6 +11,7 @@ export default async function TripList({ promise }) {
             <div key={trip._id}>
                 
                 <Trip
+                    _id={trip._id}
                     description={trip.description}
                     images={trip.images}
                     cost={trip.cost}

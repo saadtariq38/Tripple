@@ -1,4 +1,7 @@
+'use client'
+import { useState } from "react";
 
+import registerForTrip from "@/lib/registerForTrip";
 import {
   Card,
   CardHeader,
@@ -23,7 +26,20 @@ import {
 
 
 
+
 export default function TripDetail( props ) {
+  const [progress, setProgress] = useState()
+
+  const onRegisterClick = async (tripId) => {
+    try {
+      await registerForTrip(tripId)
+      setProgress("Registered successfully")
+    } catch (error) {
+      if (error.message === "Unauthorized-only traveller can register for trips") {
+        setProgress("Only travellers can register for trips")
+      }
+    }
+  }
   return (
     <div className="flex justify-center items-center my-20">
       <div className="mr-20">
@@ -89,7 +105,7 @@ export default function TripDetail( props ) {
         </div>
       </CardBody>
       <CardFooter className="pt-3">
-        <Button size="lg" fullWidth={true}>
+        <Button onClick={() => onRegisterClick(props._id)} size="lg" fullWidth={true}>
           Reserve
         </Button>
       </CardFooter>
@@ -98,19 +114,53 @@ export default function TripDetail( props ) {
       <div className="flex-col flex justify-center items-center">
 
 
-        <p class="max-w-lg text-3xl font-semibold leading-normal text-gray-900 dark:text-white">{props.itinerary}</p>
+        <div className="max-w-lg text-3xl font-semibold leading-normal text-gray-900 dark:text-white mb-20">{props.itinerary}</div>
+        <p className="max-w-lg text-2xl font-semibold leading-normal text-gray-900 dark:text-white pr-96">Comments</p>
         {props.comments.map((comment) => {
           return (
-            <div className="mt-6">
+            <div className="mt-12 pr-60">
+              <p className="my-1">{`User: ${comment.user}`}</p>
               <p className="my-1">{comment.text}</p>
-              <p className="my-1">{comment.user}</p>
             </div>
         
          )})}
 
 
       </div>
+      {
+        progress === "Only travellers can register for trips" && (
+          <div id="toast-danger" class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+              <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+              <span class="sr-only">Error icon</span>
+            </div>
+            <div class="ml-3 text-sm font-normal">Agents can not register for trips</div>
+            <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-danger" aria-label="Close">
+              <span class="sr-only">Close</span>
+              <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            </button>
+          </div>
+        )
+      }
+
+      {
+        progress === "Registered successfully" && (
+          <div id="toast-success" class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+              <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+              <span class="sr-only">Check icon</span>
+            </div>
+            <div class="ml-3 text-sm font-normal">Registered for Trip</div>
+            <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
+              <span class="sr-only">Close</span>
+              <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            </button>
+          </div>
+        )
+      }
     </div>
+
+    
     
   );
 }

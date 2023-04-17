@@ -12,6 +12,7 @@ export default function TripDetailsPage() {
 
   return (
     <TripDetail
+      _id={storedTrip._id}
       description={storedTrip.description}
       images={storedTrip.images}
       cost={storedTrip.cost}
