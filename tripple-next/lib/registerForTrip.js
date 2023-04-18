@@ -30,6 +30,7 @@ const registerForTrip = async (tripId) => {
       console.log(error);
     }
   };
+  //commit fir shab purposes
 
 export default registerForTrip;
 
