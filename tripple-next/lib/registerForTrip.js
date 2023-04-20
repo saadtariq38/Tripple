@@ -1,12 +1,7 @@
 const jwt = require('jsonwebtoken');
 
-const registerForTrip = async (tripId) => {
-    const accessToken = localStorage.getItem('accessToken');
-  
-    if (!accessToken) {
-      window.location.href = '/register';
-      return;
-    }
+const registerForTrip = async (tripId, accessToken) => {
+    
   
     const decodedToken = jwt.decode(accessToken);
     const userRole = decodedToken.role;
@@ -30,7 +25,7 @@ const registerForTrip = async (tripId) => {
       console.log(error);
     }
   };
-  //commit fir shab purposes
+  
 
 export default registerForTrip;
 

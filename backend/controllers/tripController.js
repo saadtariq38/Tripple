@@ -76,7 +76,7 @@ const getTrips = asyncHandler(async (req, res) => {
 // @route   GET /api/trips/userTrips
 // @access  Private
 const getUsertrips = asyncHandler(async (req, res) => {
-   const { _id, email, role } = req.user;
+   const { _id, role } = req.user;
 
    try {
        if(role == 1) {
@@ -428,7 +428,7 @@ const registerForTrip = asyncHandler( async (req, res) => {
 })
 
 // @desc    Unregister for trip with id
-// @route   POST /api/trips/unregister/:id
+// @route   PUT /api/trips/unregister/:id
 // @access  Private
 
 const unregisterForTrip = asyncHandler( async (req, res) => {
@@ -492,7 +492,7 @@ const unregisterForTrip = asyncHandler( async (req, res) => {
 // @route   POST /api/trips/review/:id
 // @access  Private
 
-//RATING NOT WORKING
+
 const addTripReview = asyncHandler(async (req,res) => {
     const { _id, role } = req.user
     if(role == 2) {    //if user is an agent they cannot add a trip review

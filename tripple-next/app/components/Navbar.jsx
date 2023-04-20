@@ -19,6 +19,7 @@ export default function NavbarComponent() {
   }
   const [openNav, setOpenNav] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+  
  
   useEffect(() => {
     window.addEventListener(
@@ -59,16 +60,18 @@ export default function NavbarComponent() {
           Blocks
         </a>
       </Typography>
-      <Typography
+      
+      {loggedIn && (<Typography
         as="li"
-        variant="small"
+        variant="medium"
         color="blue-gray"
         className="p-1 font-normal"
       >
-        <a href="#" className="flex items-center mr-40">
-          Docs
+        <a href="/myTrips" className="flex items-center mr-40 font-semibold">
+          My Trips
         </a>
-      </Typography>
+      </Typography>)}
+
     </ul>
   );
  
@@ -96,7 +99,7 @@ export default function NavbarComponent() {
         </Typography>
         <div className="hidden lg:block">{navList}</div>
         {!loggedIn ? (
-          <>
+          <div className="ml-48">
             <Link href='/register'>
               <Button variant="gradient" size="sm" className="hidden lg:inline-block ml-96">
                 <span>Register</span>
@@ -107,13 +110,15 @@ export default function NavbarComponent() {
                 <span>Login</span>
               </Button>
             </Link>
-          </>
+          </div>
         ) : (
+          <div className="ml-7">
           <Link href='/'>
             <Button onClick={logout} variant="gradient" size="sm" className="hidden lg:inline-block ml-96">
               <span>Log out</span>
             </Button>
           </Link>
+          </div>
         )}
         
         
@@ -158,7 +163,6 @@ export default function NavbarComponent() {
       <MobileNav open={openNav}>
         <div className="container mx-auto">
           {navList}
-          
         </div>
       </MobileNav>
     </Navbar>

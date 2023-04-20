@@ -32,7 +32,13 @@ export default function TripDetail( props ) {
 
   const onRegisterClick = async (tripId) => {
     try {
-      await registerForTrip(tripId)
+      const accessToken = localStorage.getItem('accessToken');
+
+      if (!accessToken) {
+        window.location.href = '/login';
+        return
+      }
+      await registerForTrip(tripId, accessToken)
       setProgress("Registered successfully")
     } catch (error) {
       if (error.message === "Unauthorized-only traveller can register for trips") {
