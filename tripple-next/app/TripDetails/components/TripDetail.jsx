@@ -1,6 +1,9 @@
 'use client'
 import { useState } from "react";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
+
 import registerForTrip from "@/lib/registerForTrip";
 import {
   Card,
@@ -16,7 +19,6 @@ import {
   BanknotesIcon,
   StarIcon,
   HeartIcon,
-  FireIcon,
   UsersIcon,
   ClockIcon,
   ChevronDoubleRightIcon,
@@ -40,9 +42,30 @@ export default function TripDetail( props ) {
       }
       await registerForTrip(tripId, accessToken)
       setProgress("Registered successfully")
+      toast.success('Registered Successfully!', {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+
     } catch (error) {
       if (error.message === "Unauthorized-only traveller can register for trips") {
         setProgress("Only travellers can register for trips")
+        toast.error("Only Travellers can register for trips!", {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       }
     }
   }
@@ -133,7 +156,18 @@ export default function TripDetail( props ) {
 
 
       </div>
-      {
+
+      <div><ToastContainer position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light" /></div>
+      {/* {
         progress === "Only travellers can register for trips" && (
           <div id="toast-danger" class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
             <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
@@ -163,7 +197,7 @@ export default function TripDetail( props ) {
             </button>
           </div>
         )
-      }
+      } */}
     </div>
 
     

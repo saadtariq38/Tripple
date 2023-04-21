@@ -44,7 +44,9 @@ const MyTripsPage = () => {
           setUserTrips(data);
         })
         .catch((error) => {
-          if(error.message === "token expired sending 401"){
+          console.log("yee")
+          console.log(error.message)
+          if(error.message === 'Not authorized'){
             const newAccessToken = refreshToken(localStorage.getItem('refreshToken'))
             localStorage.setItem('accessToken', newAccessToken)
             getUserRegisteredTrips(accessToken)

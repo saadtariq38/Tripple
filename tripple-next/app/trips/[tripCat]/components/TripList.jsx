@@ -3,6 +3,7 @@ import Trip from "./Trip"
 
 export default async function TripList({ promise }) {
     const trips = await promise
+    console.log(trips)
     
 
     const content = trips.map(trip => {

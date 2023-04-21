@@ -2,6 +2,8 @@
 import unregisterFromTrip from "@/lib/unregisterFromTrip"
 import { useState } from "react"
 import Link from "next/link"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 export default function UserTrip(props) {
 
@@ -16,17 +18,55 @@ export default function UserTrip(props) {
       }
       await unregisterFromTrip(tripId, accessToken)
       setProgress("Unregistered successfully")
-      window.location.href = "/myTrips"
+      toast.success('unregistered successfully!', {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+
+        setTimeout(() => {
+          window.location.href = "/myTrips";
+        }, 1500);
+
 
     } catch (error) {
       if (error.message === "Unauthorized-only traveller can unregister from trips") {
         setProgress("Only travellers can unregister from trips")
+        toast.error('Only travellers can unregister from trips!', {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          });
       } else if (error.message === "token expired sending 401") {
         const newAccessToken = refreshToken(localStorage.getItem('refreshToken'))
         localStorage.setItem('accessToken', newAccessToken)
         await unregisterFromTrip(tripId, newAccessToken)
           .then((data) => {
             setProgress("Unregistered successfully")
+            toast.success('unregistered successfully!', {
+              position: "bottom-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              });
+      
+              setTimeout(() => {
+                window.location.href = "/myTrips";
+              }, 1500);
           })
       }
 
@@ -75,6 +115,17 @@ export default function UserTrip(props) {
       <p className="mt-4 text-sm leading-6 col-start-1 sm:col-span-2 lg:mt-6 lg:row-start-4 lg:col-span-1 dark:text-slate-400">
         {props.description}
       </p>
+      <div><ToastContainer position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light" /></div>
     </div>
+    
   )
 }
