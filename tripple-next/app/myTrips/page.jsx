@@ -6,6 +6,7 @@ import LoadingSpinner from './loading';
 import UserTripList from "./components/UserTripList";
 import { useState } from "react";
 import { useEffect } from "react";
+import refreshToken from "@/lib/refreshToken";
 
 const MyTripsPage = () => {
 
@@ -43,7 +44,14 @@ const MyTripsPage = () => {
           setUserTrips(data);
         })
         .catch((error) => {
-          console.log('Error:', error);
+          if(error.message === "token expired sending 401"){
+            const newAccessToken = refreshToken(localStorage.getItem('refreshToken'))
+            localStorage.setItem('accessToken', newAccessToken)
+            getUserRegisteredTrips(accessToken)
+            .then((data) => {
+              setUserTrips(data);
+            })
+          }
         });
     }
 

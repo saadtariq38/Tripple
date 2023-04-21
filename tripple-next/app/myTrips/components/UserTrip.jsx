@@ -16,14 +16,22 @@ export default function UserTrip(props) {
       }
       await unregisterFromTrip(tripId, accessToken)
       setProgress("Unregistered successfully")
-      
+      window.location.href = "/myTrips"
+
     } catch (error) {
       if (error.message === "Unauthorized-only traveller can unregister from trips") {
         setProgress("Only travellers can unregister from trips")
+      } else if (error.message === "token expired sending 401") {
+        const newAccessToken = refreshToken(localStorage.getItem('refreshToken'))
+        localStorage.setItem('accessToken', newAccessToken)
+        await unregisterFromTrip(tripId, newAccessToken)
+          .then((data) => {
+            setProgress("Unregistered successfully")
+          })
       }
+
+
     }
-    
-    
   }
 
   return (

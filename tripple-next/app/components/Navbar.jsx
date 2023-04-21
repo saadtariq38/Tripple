@@ -95,7 +95,7 @@ export default function NavbarComponent() {
           variant="small"
           className="mr-4 cursor-pointer py-1.5 font-normal"
         >
-          <span className="text-2xl text-blue-500 font-bold">Tripple</span>
+          <span className="text-2xl text-blue-500 font-semibold">Tripple</span>
         </Typography>
         <div className="hidden lg:block">{navList}</div>
         {!loggedIn ? (
