@@ -37,8 +37,20 @@ export default function TripDetail( props ) {
       const accessToken = localStorage.getItem('accessToken');
 
       if (!accessToken) {
-        window.location.href = '/login';
-        return
+        toast.error("Please login before registering!", {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setTimeout(() => {
+          window.location.href = '/login';
+          return
+        }, 1500)
       }
       await registerForTrip(tripId, accessToken)
       setProgress("Registered successfully")
@@ -135,7 +147,7 @@ export default function TripDetail( props ) {
       </CardBody>
       <CardFooter className="pt-3">
         <Button onClick={() => onRegisterClick(props._id)} size="lg" fullWidth={true}>
-          Reserve
+          Book a seat!
         </Button>
       </CardFooter>
     </Card>

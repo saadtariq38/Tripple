@@ -111,14 +111,13 @@ export default function SignUpTravellerPage() {
       };
 
     const handleSubmit = async (event) => {
-        console.log("hi")
+      
         
         validateForm()
-        console.log(isFormValid)
-        console.log(formErrors)
+        
         event.preventDefault();
         if (isFormValid) {
-            console.log("hi2")
+           
             // get the form data
             // Remove confirmPassword field from formData
           const { confirmPassword, ...dataWithoutConfirmPassword } = formData;
@@ -129,7 +128,7 @@ export default function SignUpTravellerPage() {
           // Send POST request with form data as x-www-url-encoded data in the request body
             
 
-            console.log(formData)
+            
 
             // make the API request
             const response = await fetch('http://localhost:5000/api/user/register', {

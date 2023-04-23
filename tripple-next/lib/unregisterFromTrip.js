@@ -20,7 +20,7 @@ const unregisterFromTrip = async (tripId, accessToken) => {
             headers,
         });
         const data = await response.json();
-        console.log(data);
+        
     } catch (error) {
         console.log(error);
         throw new Error("could not unregister from trip")

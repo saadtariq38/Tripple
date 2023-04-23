@@ -17,7 +17,7 @@ const getUserRegisteredTrips = async (accessToken) => {
     try {
         const res = await fetch(`http://localhost:5000/api/trips/userTrips`, requestOptions);
         const tripData = await res.json()
-        console.log(tripData)
+        
         return tripData
     } catch (error) {
         console.log(error)

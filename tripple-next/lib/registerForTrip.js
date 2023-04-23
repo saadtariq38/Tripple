@@ -20,7 +20,7 @@ const registerForTrip = async (tripId, accessToken) => {
         headers,
       });
       const data = await response.json();
-      console.log(data);
+      
     } catch (error) {
       console.log(error);
     }
