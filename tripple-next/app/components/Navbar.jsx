@@ -9,8 +9,11 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import Link from "next/link";
+import jwt from "jsonwebtoken";
 
 export default function NavbarComponent() {
+
+
 
 
   const logout = () => {
@@ -19,6 +22,7 @@ export default function NavbarComponent() {
   }
   const [openNav, setOpenNav] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [role, setRole] = useState(null)
   
  
   useEffect(() => {
@@ -67,7 +71,7 @@ export default function NavbarComponent() {
         color="blue-gray"
         className="p-1 font-normal"
       >
-        <a href="/myTrips" className="flex items-center mr-40 font-semibold">
+        <a href={role === 1 ? '/myTrips' : 'myAgentTrips'} className="flex items-center mr-40 font-semibold">
           My Trips
         </a>
       </Typography>)}
@@ -82,6 +86,9 @@ export default function NavbarComponent() {
         setLoggedIn(false)
       } else {
         setLoggedIn(true)
+        const decoded = jwt.decode(localStorage.getItem('accessToken'))
+        console.log(decoded.role)
+        setRole(decoded.role)
       }
     }
   }, []); // Run this effect only once on mount

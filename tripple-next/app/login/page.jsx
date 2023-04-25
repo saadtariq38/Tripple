@@ -38,17 +38,22 @@ export default function LoginForm() {
             body: JSON.stringify(formDataWithRole)
         });
 
+        
+
         if (response.ok) {
             // get the access and refresh tokens from the response
             
             const data = await response.json();
+           
             // store the tokens in the local storage
             localStorage.setItem('accessToken', data.accessToken);
             localStorage.setItem('refreshToken', data.refreshToken);
 
             setFormErrors(null)
             // redirect the user to the dashboard or homepage
-            window.location.href = '/';
+
+            window.location.href = "/";
+            
            
         } else {
             // handle the error

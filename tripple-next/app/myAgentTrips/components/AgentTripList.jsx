@@ -1,17 +1,15 @@
-import Trip from "./Trip"
+import AgentTrip from "./AgentTrip"
 
+export default function AgentTripList({ agentTrips }) {
 
-export default async function TripList({ promise }) {
-    const trips = await promise
-    
-    
+   
+    //console.log(userTrips)
 
-    const content = trips.map(trip => {
-        
+    const content = agentTrips.map((trip => {
         return (
             <div key={trip._id}>
                 
-                <Trip
+                <AgentTrip
                     _id={trip._id}
                     description={trip.description}
                     images={trip.images}
@@ -27,23 +25,15 @@ export default async function TripList({ promise }) {
                     comments={trip.comments}
                     startingLocation={trip.startingLocation}
                     itinerary={trip.itinerary}
+                    registeredUsers={trip.registeredUsers}
                 />
-                {/* agentName = data <= prop to be passed in Trip
-                <h2>{trip.name}</h2>
-                <p>{trip.description}</p>
-                <p>{trip.duration}</p>
-                <p>{trip.description}</p>
-                <p>{trip.tripCategory}</p>
-                <p>{trip.tripType}</p>
-                <p>{trip.images}</p>
-                <p>{trip.cost}</p> */}
             </div>
 
             
         )
-    })
+    }))
 
     return content
-  
+ 
 }
 

@@ -246,12 +246,15 @@ const loginUser = asyncHandler(async(req, res) => {
     let user
 
     //check for user email
-    try {
+    
         user = await User.findOne({ email })
-    } catch (error) {
-        res.status(404)
-        throw new Error("User not found")
-    }
+        if (!user){
+            res.status(404)
+            throw new Error("User not found")
+        }
+
+        
+    
     
     const { _id } = user
     
@@ -265,6 +268,7 @@ const loginUser = asyncHandler(async(req, res) => {
                 const refToken = generateRefreshToken( _id, role )
                 // localStorage.setItem('accessToken', accToken)
                 // localStorage.setItem('refreshToken', refToken)
+                console.log("weeee")
 
                 User_Event.create({
                     user: _id,
@@ -283,7 +287,7 @@ const loginUser = asyncHandler(async(req, res) => {
 
                 })
             } catch (error) {
-                throw new Error("Login failedmfor traveller")
+                throw new Error("Login failed for traveller")
             }
         } else if (role== 2) {  //condition for user_Agent
             try {
@@ -292,6 +296,7 @@ const loginUser = asyncHandler(async(req, res) => {
                 const refToken = generateRefreshToken( _id, role)
                 // localStorage.setItem('accessToken', accToken)
                 // localStorage.setItem('refreshToken', refToken)
+                console.log("here")
 
                 User_Event.create({
                     user: _id,

@@ -1,13 +1,13 @@
 'use client'
 import unregisterFromTrip from "@/lib/unregisterFromTrip"
-import { useState } from "react"
+//import { useState } from "react"
 import Link from "next/link"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
 export default function UserTrip(props) {
 
-  const [progress, setProgress] = useState()
+  //const [progress, setProgress] = useState()
 
   const handleTripClick = async (tripId) => {
     try {
@@ -17,7 +17,7 @@ export default function UserTrip(props) {
         return
       }
       await unregisterFromTrip(tripId, accessToken)
-      setProgress("Unregistered successfully")
+      //setProgress("Unregistered successfully")
       toast.success('unregistered successfully!', {
         position: "bottom-center",
         autoClose: 5000,
@@ -36,7 +36,7 @@ export default function UserTrip(props) {
 
     } catch (error) {
       if (error.message === "Unauthorized-only traveller can unregister from trips") {
-        setProgress("Only travellers can unregister from trips")
+        //setProgress("Only travellers can unregister from trips")
         toast.error('Only travellers can unregister from trips!', {
           position: "bottom-center",
           autoClose: 5000,
@@ -52,7 +52,7 @@ export default function UserTrip(props) {
         localStorage.setItem('accessToken', newAccessToken)
         await unregisterFromTrip(tripId, newAccessToken)
           .then((data) => {
-            setProgress("Unregistered successfully")
+            //setProgress("Unregistered successfully")
             toast.success('unregistered successfully!', {
               position: "bottom-center",
               autoClose: 5000,

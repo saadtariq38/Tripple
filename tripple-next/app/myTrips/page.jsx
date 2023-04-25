@@ -1,8 +1,8 @@
 'use client'
 
 import getUserRegisteredTrips from "@/lib/getUserRegisteredTrips"
-import { Suspense } from 'react';
-import LoadingSpinner from './loading';
+//import { Suspense } from 'react';
+//import LoadingSpinner from './loading';
 import UserTripList from "./components/UserTripList";
 import { useState } from "react";
 import { useEffect } from "react";

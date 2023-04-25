@@ -340,6 +340,8 @@ const cancelTrip = asyncHandler( async (req, res) => {
     
     if(tripToCancel.agent.equals(_id)) {
         const cancelledTrip = await Trip.findOneAndUpdate({_id : req.params.id}, {status : "cancelled"})
+    } else {
+        throw new Error("Only allowed to cancel your own trips")
     }
 
     Trip_Event.create({
