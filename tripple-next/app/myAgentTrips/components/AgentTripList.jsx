@@ -22,7 +22,7 @@ export default function AgentTripList({ agentTrips }) {
                     name={trip.name}
                     duration={trip.duration}
                     status={trip.status}
-                    comments={trip.comments}
+                    //comments={trip.comments}
                     startingLocation={trip.startingLocation}
                     itinerary={trip.itinerary}
                     registeredUsers={trip.registeredUsers}

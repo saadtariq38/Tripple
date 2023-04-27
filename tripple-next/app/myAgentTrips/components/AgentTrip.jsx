@@ -19,7 +19,7 @@ export default function AgentTrip(props) {
         dispatch(setAgentTrip(trip))
     }
 
-    const deleteTripClick = async (tripId) => {
+    async function deleteTripClick(tripId) {
         try {
             const accessToken = localStorage.getItem('accessToken')
             if (!accessToken) {
@@ -141,10 +141,15 @@ export default function AgentTrip(props) {
           theme="light" /></div>
       </div>
 
-      <div className="flex items-center">
-      <button type="button" class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-large rounded-full text-medium px-5 py-2.5 text-center mr-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">Delete Trip</button>
+      {props.status === 'cancelled' ? (
+          <h1 class="flex items-center justify-center underline underline-offset-3 mb-4 text-xl font-extrabold leading-none tracking-tight text-red-900 md:text-3xl lg:text-4xl dark:text-white">Deleted</h1>
+      ) : (
 
+      <div className="flex items-center">
+        <button type="button" onClick={() => deleteTripClick(props._id)} class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-large rounded-full text-medium px-5 py-2.5 text-center mr-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">Delete Trip</button>
       </div>
+      )}
+
 
     </div>
     
