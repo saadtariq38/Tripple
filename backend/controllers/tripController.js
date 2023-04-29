@@ -150,6 +150,7 @@ const setTrip = asyncHandler( async (req, res) => {
         //get agent info from the id we got from auth token
       //  const agentInfo = await User_Agent.find({user: _id})
         const { name, description, duration, images, tripCategory, tripType, cost, availableSeats, startingLocation, destination, itinerary } = req.body
+       
 
         //check for all required fields
         if(!name || !description || !duration || !tripCategory || !tripType || !cost || !availableSeats || !startingLocation || !destination || !itinerary) {

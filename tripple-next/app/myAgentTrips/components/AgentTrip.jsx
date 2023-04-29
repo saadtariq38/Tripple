@@ -85,9 +85,9 @@ export default function AgentTrip(props) {
     }
 
   return (
-    <div className="flex flex-row mr-28">
+    <div className="flex flex-row">
 
-      <div className="max-w-4xl mx-auto grid grid-cols-1 lg:max-w-5xl lg:gap-x-20 lg:grid-cols-2 mt-16">
+      <div className="max-w-4xl mx-auto grid grid-cols-1 lg:max-w-5xl lg:gap-x-20 lg:grid-cols-2 mt-16 mr-24">
         <div className="relative p-3 col-start-1 row-start-1 flex flex-col-reverse rounded-lg bg-gradient-to-t from-black/75 via-black/0 sm:bg-none sm:row-start-2 sm:p-0 lg:row-start-1">
           <h1 className="mt-1 text-lg font-semibold text-black sm:text-slate-900 md:text-2xl dark:sm:text-white">{props.name}</h1>
           <p className="text-lg leading-4 font-medium text-black sm:text-slate-500 dark:sm:text-slate-400">Pkr {props.cost}/head</p>
