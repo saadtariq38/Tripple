@@ -1,6 +1,6 @@
 'use client'
 import { useState } from "react";
-
+import Link from "next/link";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
@@ -123,9 +123,11 @@ export default function AgentTripDetail( props ) {
         </div>
       </CardBody>
       <CardFooter className="pt-3">
-        <Button onClick={() => onEditClick()} size="lg" fullWidth={true} className="bg-yellow-400 hover:bg-yellow-500">
+        <Link href="/editTrip">
+        <Button size="lg" fullWidth={true} className="bg-yellow-400 hover:bg-yellow-500">
           Edit trip!
         </Button>
+        </Link>
       </CardFooter>
     </Card>
       </div>
