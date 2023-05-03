@@ -9,6 +9,10 @@ export default function Trip( props ) {
   const dispatch = useDispatch()
 
   function handleTripClick(trip) {
+
+    const jsonTrip = JSON.stringify(trip);
+    localStorage.setItem('tripDetailsData', jsonTrip)
+    console.log(localStorage.getItem('tripDetailsData'))
     dispatch(setTrip(trip));
     
   }
