@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { setTrip } from '@/redux/features/tripSlice';
 
-export default function Trip( props ) {
+export default function SortedTrip( props ) {
 
   const dispatch = useDispatch()
 
@@ -12,7 +12,7 @@ export default function Trip( props ) {
 
     const jsonTrip = JSON.stringify(trip);
     localStorage.setItem('tripDetailsData', jsonTrip)
-    console.log(localStorage.getItem('tripDetailsData'))
+    
     dispatch(setTrip(trip));
     
   }

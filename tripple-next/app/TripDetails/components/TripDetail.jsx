@@ -208,7 +208,7 @@ export default function TripDetail(props) {
                 className="flex items-center gap-1.5 font-normal"
               >
                 <StarIcon className="-mt-0.5 h-5 w-5 text-yellow-700" />
-                {`${props.rating}(${props.numOfRatings})`}
+                {`${props.rating.toFixed(1)}(${props.numOfRatings})`}
               </Typography>
             </div>
             <Typography color="gray">

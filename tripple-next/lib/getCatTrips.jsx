@@ -11,4 +11,6 @@ export default async function getCatTrips(cat) {
     const resData = await res.json();
   
     return resData;
+
+    
   }
