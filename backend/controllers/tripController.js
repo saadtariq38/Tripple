@@ -285,13 +285,13 @@ const updateTrip = asyncHandler(async (req, res) => {
 })
 
 // @desc    Sort trips according to value passed in body
-// @route   GET /api/trips/sortedTrips
+// @route   POST /api/trips/sortedTrips
 // @access  Public
 const sortTrips = asyncHandler(async (req, res) => {
 
-    const { sortBy, sortOrder } = req.body
+    const { sortBy, sortOrder, trips } = req.body
 
-    const trips = await Trip.find({})
+    
     const sortedTrips = trips
 
     try {
@@ -514,6 +514,9 @@ const addTripReview = asyncHandler(async (req,res) => {
         res.status(404)
         throw new Error("Trip to review not found")
     }
+
+
+
 
     
     if (comment) {

@@ -1,8 +1,13 @@
 'use client'
 import { useState } from "react";
 
+
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+import rateTrip from "@/lib/rateTrip";
+import rateTripOnlyRating from "@/lib/rateTripOnlyRating";
+
+
 
 import registerForTrip from "@/lib/registerForTrip";
 import {
@@ -23,14 +28,107 @@ import {
   ClockIcon,
   ChevronDoubleRightIcon,
   GlobeAsiaAustraliaIcon,
+  XMarkIcon
 
 } from "@heroicons/react/24/solid";
 
 
 
 
-export default function TripDetail( props ) {
+export default function TripDetail(props) {
+
+
   const [progress, setProgress] = useState()
+
+  const [showRatingModal, setShowRatingModal] = useState(false)
+
+  const [selectedRating, setSelectedRating] = useState(null);
+
+  const [review, setReview] = useState("")
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const accessToken = localStorage.getItem('accessToken')
+    console.log("clicked")
+    
+    if(selectedRating === 0 || selectedRating === null) {
+      console.log("mewo")
+      toast.error("Please add a rating to submit a review", {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      //window.location.href = '/'
+    }
+
+    try {
+      
+      if(!review) {
+        console.log("here")
+        await rateTripOnlyRating(selectedRating, props._id, accessToken)
+       // dispatch(setTrip(props))
+       
+        toast.success('Trip rating added successfully', {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        console.log("hereEEE")
+        await rateTrip(selectedRating, review, props._id, accessToken)
+        
+        toast.success('Trip review with comment added successfully', {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        // window.location.href = '/'
+      }
+    } catch (error) {
+      toast.error("Could not add review", {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+
+      //window.location.href = '/'
+
+    }
+
+
+  const handleChange = (event) => {
+    setSelectedRating(event.target.value);
+  };
+
+
+  const handleButtonClick = () => {
+    setShowRatingModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowRatingModal(false);
+  };
 
   const onRegisterClick = async (tripId) => {
     try {
@@ -84,75 +182,153 @@ export default function TripDetail( props ) {
   return (
     <div className="flex justify-center items-center my-20">
       <div className="mr-20">
-      <Card className="w-full max-w-[26rem] shadow-lg">
-      <CardHeader floated={false} color="blue-gray">
-        <img
-          src="/trip1.jpg"
-          alt="img here"
-        />
-        <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60 " />
-        <IconButton
-          size="sm"
-          color="red"
-          variant="text"
-          className="!absolute top-4 right-4 rounded-full"
-        >
-          <HeartIcon className="h-6 w-6" />
-        </IconButton>
-      </CardHeader>
-      <CardBody>
-        <div className="mb-3 flex items-center justify-between">
-          <Typography variant="h5" color="blue-gray" className="font-medium">
-            {props.name}
-          </Typography>
-          <Typography
-            color="blue-gray"
-            className="flex items-center gap-1.5 font-normal"
-          >
-            <StarIcon className="-mt-0.5 h-5 w-5 text-yellow-700" />
-            {`${props.rating}(${props.numOfRatings})`}
-          </Typography>
-        </div>
-        <Typography color="gray">
-          {props.description}
-        </Typography>
-        <div className="group mt-8 inline-flex flex-wrap items-center gap-8">
-          <Tooltip content={`PKR ${props.cost} / head`}>
-            <span className="cursor-pointer rounded-full border border-blue-500/5 bg-blue-500/5 p-3 text-blue-500 transition-colors hover:border-blue-500/10 hover:bg-blue-500/10 hover:!opacity-100 group-hover:opacity-70">
-              <BanknotesIcon className="h-5 w-5" />
-            </span>
-          </Tooltip>
-          <Tooltip content={`${props.availableSeats} available slot(s)`}>
-            <span className={`cursor-pointer rounded-full border ${props.availableSeats > 0 ? 'border-blue-500/5 bg-blue-500/5 p-3 text-blue-500 transition-colors hover:border-blue-500/10 hover:bg-blue-500/10 hover:!opacity-100 group-hover:opacity-70' : 'border-red-500/5 bg-red-500/5  p-3 text-red-500 transition-colors hover:border-red-500/10 hover:bg-red-500/10 hover:!opacity-100 group-hover:opacity-70'}`}>
-              <UsersIcon className="h-5 w-5" />
-            </span>
-          </Tooltip>
-          <Tooltip content={`${props.duration} days`}>
-            <span className="cursor-pointer rounded-full border border-blue-500/5 bg-blue-500/5 p-3 text-blue-500 transition-colors hover:border-blue-500/10 hover:bg-blue-500/10 hover:!opacity-100 group-hover:opacity-70">
-              <ClockIcon className="h-5 w-5" />
-            </span>
-          </Tooltip>
-          <Tooltip content={`Starting Location: ${props.startingLocation}`}>
-            <span className="cursor-pointer rounded-full border border-blue-500/5 bg-blue-500/5 p-3 text-blue-500 transition-colors hover:border-blue-500/10 hover:bg-blue-500/10 hover:!opacity-100 group-hover:opacity-70">
-              <ChevronDoubleRightIcon className="h-5 w-5" />
-            </span>
-          </Tooltip>
-          <Tooltip content={`Destination: ${props.destination}`}>
-            <span className="cursor-pointer rounded-full border border-blue-500/5 bg-blue-500/5 p-3 text-blue-500 transition-colors hover:border-blue-500/10 hover:bg-blue-500/10 hover:!opacity-100 group-hover:opacity-70">
-              <GlobeAsiaAustraliaIcon className="h-5 w-5" />
-            </span>
-          </Tooltip>
-          
-        </div>
-      </CardBody>
-      <CardFooter className="pt-3">
-        <Button onClick={() => onRegisterClick(props._id)} size="lg" fullWidth={true}>
-          Book a seat!
-        </Button>
-      </CardFooter>
-    </Card>
+        <Card className="w-full max-w-[26rem] shadow-lg">
+          <CardHeader floated={false} color="blue-gray">
+            <img
+              src="/trip1.jpg"
+              alt="img here"
+            />
+            <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60 " />
+            <IconButton
+              size="sm"
+              color="red"
+              variant="text"
+              className="!absolute top-4 right-4 rounded-full"
+            >
+              <HeartIcon className="h-6 w-6" />
+            </IconButton>
+          </CardHeader>
+          <CardBody>
+            <div className="mb-3 flex items-center justify-between">
+              <Typography variant="h5" color="blue-gray" className="font-medium">
+                {props.name}
+              </Typography>
+              <Typography
+                color="blue-gray"
+                className="flex items-center gap-1.5 font-normal"
+              >
+                <StarIcon className="-mt-0.5 h-5 w-5 text-yellow-700" />
+                {`${props.rating.toFixed(1)}(${props.numOfRatings})`}
+              </Typography>
+            </div>
+            <Typography color="gray">
+              {props.description}
+            </Typography>
+            <div className="group mt-8 inline-flex flex-wrap items-center gap-8">
+              <Tooltip content={`PKR ${props.cost} / head`}>
+                <span className="cursor-pointer rounded-full border border-blue-500/5 bg-blue-500/5 p-3 text-blue-500 transition-colors hover:border-blue-500/10 hover:bg-blue-500/10 hover:!opacity-100 group-hover:opacity-70">
+                  <BanknotesIcon className="h-5 w-5" />
+                </span>
+              </Tooltip>
+              <Tooltip content={`${props.availableSeats} available slot(s)`}>
+                <span className={`cursor-pointer rounded-full border ${props.availableSeats > 0 ? 'border-blue-500/5 bg-blue-500/5 p-3 text-blue-500 transition-colors hover:border-blue-500/10 hover:bg-blue-500/10 hover:!opacity-100 group-hover:opacity-70' : 'border-red-500/5 bg-red-500/5  p-3 text-red-500 transition-colors hover:border-red-500/10 hover:bg-red-500/10 hover:!opacity-100 group-hover:opacity-70'}`}>
+                  <UsersIcon className="h-5 w-5" />
+                </span>
+              </Tooltip>
+              <Tooltip content={`${props.duration} days`}>
+                <span className="cursor-pointer rounded-full border border-blue-500/5 bg-blue-500/5 p-3 text-blue-500 transition-colors hover:border-blue-500/10 hover:bg-blue-500/10 hover:!opacity-100 group-hover:opacity-70">
+                  <ClockIcon className="h-5 w-5" />
+                </span>
+              </Tooltip>
+              <Tooltip content={`Starting Location: ${props.startingLocation}`}>
+                <span className="cursor-pointer rounded-full border border-blue-500/5 bg-blue-500/5 p-3 text-blue-500 transition-colors hover:border-blue-500/10 hover:bg-blue-500/10 hover:!opacity-100 group-hover:opacity-70">
+                  <ChevronDoubleRightIcon className="h-5 w-5" />
+                </span>
+              </Tooltip>
+              <Tooltip content={`Destination: ${props.destination}`}>
+                <span className="cursor-pointer rounded-full border border-blue-500/5 bg-blue-500/5 p-3 text-blue-500 transition-colors hover:border-blue-500/10 hover:bg-blue-500/10 hover:!opacity-100 group-hover:opacity-70">
+                  <GlobeAsiaAustraliaIcon className="h-5 w-5" />
+                </span>
+              </Tooltip>
+
+            </div>
+          </CardBody>
+          <CardFooter className="pt-3">
+            <Button onClick={() => onRegisterClick(props._id)} size="lg" fullWidth={true}>
+              Book a seat!
+            </Button>
+          </CardFooter>
+        </Card>
       </div>
       <div className="flex-col flex justify-center items-center">
+
+        <button
+          className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          onClick={handleButtonClick}
+        >
+          Rate this trip
+        </button>
+
+        {showRatingModal && (
+          <div
+            className="fixed top-0 left-0 right-0 z-50 w-full h-screen overflow-x-hidden overflow-y-auto bg-opacity-75 bg-gray-500 flex items-center justify-center"
+
+          >
+            <div className="relative w-full max-w-md max-h-full bg-white rounded-md p-4">
+              <button onClick={handleCloseModal} className="absolute top-0 right-0 m-4">
+                <XMarkIcon className="h-7 w-7" />
+              </button>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">
+                Rate this trip
+              </h2>
+              <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+                <div>
+                  {[1, 2, 3, 4, 5].map((value) => (
+                    <label
+                      key={value}
+                      htmlFor={`rating-${value}`}
+                      className={`text-gray-700 cursor-pointer ${
+                        selectedRating !== null && selectedRating >= value
+                          ? "text-yellow-500"
+                          : ""
+                      } text-2xl`}
+                    >
+                      <input
+                        type="radio"
+                        id={`rating-${value}`}
+                        name="rating"
+                        value={value}
+                        className="sr-only"
+                        onChange={handleChange}
+                      />
+                      <span className="sr-only">{value} star</span>
+                      &#9733;
+                    </label>
+                  ))}
+
+                </div>
+                <div>
+                  <label
+                    htmlFor="review"
+                    className="text-gray-700 font-medium mb-2 block"
+                  >
+                    Review
+                  </label>
+                  <textarea
+                    id="review"
+                    name="review"
+                    rows="3"
+                    className="shadow-sm focus:ring-blue-300 focus:border-blue-300 block w-full sm:text-sm border-gray-300 rounded-md"
+                    placeholder="Write your review here"
+                    onChange={(event) => setReview(event.target.value)}
+                  ></textarea>
+                </div>
+
+                <div>
+                  <button
+                    type="submit"
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+
+
 
 
         <div className="max-w-lg text-3xl font-semibold leading-normal text-gray-900 dark:text-white mb-20">{props.itinerary}</div>
@@ -163,8 +339,9 @@ export default function TripDetail( props ) {
               <p className="my-1">{`User: ${comment.user}`}</p>
               <p className="my-1">{comment.text}</p>
             </div>
-        
-         )})}
+
+          )
+        })}
 
 
       </div>
@@ -179,41 +356,12 @@ export default function TripDetail( props ) {
         draggable
         pauseOnHover
         theme="light" /></div>
-      {/* {
-        progress === "Only travellers can register for trips" && (
-          <div id="toast-danger" class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
-            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
-              <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-              <span class="sr-only">Error icon</span>
-            </div>
-            <div class="ml-3 text-sm font-normal">Agents can not register for trips</div>
-            <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-danger" aria-label="Close">
-              <span class="sr-only">Close</span>
-              <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-            </button>
-          </div>
-        )
-      }
 
-      {
-        progress === "Registered successfully" && (
-          <div id="toast-success" class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
-            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
-              <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-              <span class="sr-only">Check icon</span>
-            </div>
-            <div class="ml-3 text-sm font-normal">Registered for Trip</div>
-            <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
-              <span class="sr-only">Close</span>
-              <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-            </button>
-          </div>
-        )
-      } */}
+
     </div>
 
-    
-    
+
+
   );
 }
 

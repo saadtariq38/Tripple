@@ -4,7 +4,7 @@ const { protect } = require('../middleware/authMiddleware')
 const { getTrips, setTrip, updateTrip, deleteTrip , getUsertrips, getOneTrip, sortTrips, cancelTrip, registerForTrip, unregisterForTrip, addTripReview, getOneAgentTrip} = require('../controllers/tripController')
 
 router.route('/').get(getTrips).post(protect, setTrip)
-router.route('/sortedTrips').get(sortTrips)
+router.route('/sortedTrips').post(sortTrips)
 router.route('/userTrips').get(protect, getUsertrips)
 router.route('/agent/:id').get(protect, getOneAgentTrip)
 router.route('/cancel/:id').put(protect, cancelTrip)
