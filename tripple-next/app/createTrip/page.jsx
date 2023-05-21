@@ -1,6 +1,7 @@
 'use client'
 import Head from "next/head";
 import { useState } from "react";
+import { Typography } from "@material-tailwind/react";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -112,7 +113,7 @@ export default function CreateTripPage() {
 
     const handleSubmit = async (event) => {
         console.log("submit clicked on create trip form")
-        
+
         validateForm()
         console.log(isFormValid)
         console.log("form errors below")
@@ -121,10 +122,10 @@ export default function CreateTripPage() {
 
         if (isFormValid) {
             console.log("form is valid condition true")
-            
+
             console.log(formData)
 
-            
+
             const accessToken = localStorage.getItem('accessToken')
 
             const headers = {
@@ -141,9 +142,9 @@ export default function CreateTripPage() {
 
             // make the API request
             const response = await fetch('http://localhost:5000/api/trips', requestOptions)
-                
+
             if (response.ok) {
-                
+
                 console.log(response.json)
 
                 toast.success('Trip created successfully!', {
@@ -155,7 +156,7 @@ export default function CreateTripPage() {
                     draggable: true,
                     progress: undefined,
                     theme: "light",
-                    });
+                });
 
                 // redirect the user to the dashboard or homepage
                 window.location.href = '/myAgentTrips';
@@ -196,124 +197,177 @@ export default function CreateTripPage() {
     }
 
     return (
+        <div className="container mx-auto">
+            <div className="grid grid-cols-2 gap-0">
+                <div className="col-span-1">
+                    <Head>
+                        <title>Create trip</title>
+                    </Head>
+                    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
+                        <Typography align='center' variant='h3'>
+                            Create Trip
+                        </Typography>
+                        <br></br>
+                        <div className="grid md:grid-cols-2 md:gap-2 mb-2">
+                            <div className="mb-4">
+                                <label htmlFor="name" className="block text-gray-700 font-bold mb-2">Name</label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    id="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    className={`block w-full px-3 py-2 text-gray-700 border rounded ${formErrors.name ? 'border-red-500' : 'border-gray-400'}`}
+                                    required
+                                />
+                                {formErrors.name && <span className="text-sm text-red-500">{formErrors.name}</span>}
+                            </div>
 
-        <div>
-            <Head>
-                <title>Create trip</title>
-            </Head>
-            <form onSubmit={handleSubmit}>
-                
-                <div className="grid md:grid-cols-2 md:gap-6">
+                            <div className="mb-4">
+                                <label htmlFor="itinerary" className="block text-gray-700 font-bold mb-2">Itinerary</label>
+                                <input
+                                    type="text"
+                                    name="itinerary"
+                                    id="itinerary"
+                                    value={formData.itinerary}
+                                    onChange={handleChange}
+                                    className={`block w-full px-3 py-2 text-gray-700 border rounded ${formErrors.itinerary ? 'border-red-500' : 'border-gray-400'}`}
+                                    required
+                                />
+                                {formErrors.itinerary && <span className="text-sm text-red-500">{formErrors.itinerary}</span>}
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="duration" className="block text-gray-700 font-bold mb-2">Duration</label>
+                                <input
+                                    type="number"
+                                    pattern="[0-99]{1}"
+                                    name="duration"
+                                    id="duration"
+                                    value={formData.duration}
+                                    onChange={handleChange}
+                                    className={`block w-full px-3 py-2 text-gray-700 border rounded ${formErrors.duration ? 'border-red-500' : 'border-gray-400'}`}
+                                    required
+                                />
+                                {formErrors.duration && <span className="text-sm text-red-500">{formErrors.duration}</span>}
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="description" className="block text-gray-700 font-bold mb-2 ">Description</label>
+                                <textarea
+                                    name="description"
+                                    id="description"
+                                    value={formData.description}
+                                    onChange={handleChange}
+                                    className={`block w-full px-3 py-2 text-gray-700 border rounded ${formErrors.description ? 'border-red-500' : 'border-gray-400'}`}
+                                    required
+                                    style={{ height: '75px', resize: 'vertical' }}
+                                />
 
+                                {formErrors.description && <span className="text-sm text-red-500">{formErrors.description}</span>}
+                            </div>
 
-                    <div className="relative z-0 w-full mb-6 group">
-                        <input type="text" name="name" id="name" value={formData.name} onChange={handleChange} className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${formErrors.name ? 'border-red-500' : ''}`} placeholder=" " required />
-                        <label htmlFor="name" className="peer-focus:font-small absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Name</label>
-                        <span className={` ${formErrors.name ? 'text-sm text-red-500' : 'hidden'}`}>{formErrors.name}</span>
-                    </div>
+                            <div className="mb-4">
+                                <label htmlFor="tripCategory" className="block text-gray-700 font-bold mb-2">Select trip category</label>
+                                <select id="tripCategory" onChange={(e) => setFormData({ ...formData, tripCategory: e.target.value })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option>educational</option>
+                                    <option>recreational</option>
+                                    <option>entertainment</option>
+                                </select>
+                                {formErrors.tripCategory && <span className="text-sm text-red-500">{formErrors.tripCategory}</span>}
+                            </div>
 
-                    <div className="relative z-0 w-full mb-6 group">
-                        <input type="text" name="itinerary" id="itinerary" value={formData.itinerary} onChange={handleChange} className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${formErrors.itinerary ? 'border-red-500' : ''}`} placeholder=" " required />
-                        <label htmlFor="itinerary" className="peer-focus:font-small absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Itinerary</label>
-                        <span className={` ${formErrors.itinerary ? 'text-sm text-red-500' : 'hidden'}`}>{formErrors.itinerary}</span>
-                    </div>
-                </div>
+                            <div className="mb-4">
 
-                <div className="grid md:grid-cols-2 md:gap-6">
-                    <div className="relative z-0 w-full mb-6 group">
-                        <input type="number" pattern="[0-99]{1}" name="duration" id="duration" value={formData.duration} onChange={handleChange} className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${formErrors.duration ? 'border-red-500' : ''}`} placeholder=" " required />
-                        <label htmlFor="duration" className="peer-focus:font-small absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Duration (in days)</label>
-                        <span className={` ${formErrors.duration ? 'text-sm text-red-500' : 'hidden'}`}>{formErrors.duration}</span>
-                    </div>
-                    <div className="relative z-0 w-full mb-6 group">
-                        <input type="text" name="description" id="description" value={formData.description} onChange={handleChange} className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${formErrors.description ? 'border-red-500' : ''}`} placeholder=" " required />
-                        <label htmlFor="description" className="peer-focus:font-small absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Description</label>
-                        <span className={` ${formErrors.description ? 'text-sm text-red-500' : 'hidden'}`}>{formErrors.description}</span>
-                    </div>
-                </div>
+                                <label htmlFor="tripType" className="block text-gray-700 font-bold mb-2">Select trip type</label>
+                                <select id="tripType" onChange={(e) => setFormData({ ...formData, tripType: e.target.value })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option>local</option>
+                                    <option>international</option>
 
-                <div className="grid md:grid-cols-2 md:gap-6">
-                    <div className="relative z-0 w-full mb-6 group">
+                                </select>
+                                {formErrors.tripType && <span className="text-sm text-red-500">{formErrors.tripType}</span>}
+                            </div>
 
-                        <label htmlFor="tripCategory" className="block mb-2 text-sm font-small text-gray-900 dark:text-white">Select trip category</label>
-                        <select id="tripCategory" onChange={(e) => setFormData({ ...formData, tripCategory: e.target.value })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option>educational</option>
-                            <option>recreational</option>
-                            <option>entertainment</option>
-                        </select>
-                        <span className={` ${formErrors.tripCategory ? 'text-sm text-red-500' : 'hidden'}`}>{formErrors.tripCategory}</span>
-                    </div>
-
-                    <div className="relative z-0 w-full mb-6 group">
-
-                        <label htmlFor="tripType" className="block mb-2 text-sm font-small text-gray-900 dark:text-white">Select trip type</label>
-                        <select id="tripType" onChange={(e) => setFormData({ ...formData, tripType: e.target.value })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option>local</option>
-                            <option>international</option>
-                            
-                        </select>
-                        <span className={` ${formErrors.tripType ? 'text-sm text-red-500' : 'hidden'}`}>{formErrors.tripType}</span>
-                    </div>
-                </div>
-
-                <div className="grid md:grid-cols-2 md:gap-6">
-                    <div className="relative z-0 w-full mb-6 group">
-                       <input type="number" name="cost" id="cost" value={formData.cost} onChange={handleChange} className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${formErrors.cost ? 'border-red-500' : ''}`} placeholder="" required />
-                        <label htmlFor="cost" className="peer-focus:font-small absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Cost</label>
-                        <span className={` ${formErrors.cost ? 'text-sm text-red-500' : 'hidden'}`}>{formErrors.cost}</span>
-                    </div>
-
-                    <div className="relative z-0 w-full mb-6 group">
-                       <input type="number" pattern="[0-99]{1}" name="availableSeats" id="availableSeats" value={formData.availableSeats} onChange={handleChange} className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${formErrors.availableSeats ? 'border-red-500' : ''}`} placeholder=" " required />
-                        <label htmlFor="duration" className="peer-focus:font-small absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Available seats</label>
-                        <span className={` ${formErrors.availableSeats ? 'text-sm text-red-500' : 'hidden'}`}>{formErrors.availableSeats}</span>
-                    </div>
-                </div>
-
-                <div className="grid md:grid-cols-2 md:gap-6">
-                    <div className="relative z-0 w-full mb-6 group">
-                        <input type="text" name="startingLocation" id="startingLocation" value={formData.startingLocation} onChange={handleChange} className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${formErrors.startingLocation ? 'border-red-500' : ''}`} placeholder=" " required />
-                        <label htmlFor="startingLocation" className="peer-focus:font-small absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Starting Location</label>
-                        <span className={` ${formErrors.startingLocation ? 'text-sm text-red-500' : 'hidden'}`}>{formErrors.startingLocation}</span>
-                    </div>
-
-                    <div className="relative z-0 w-full mb-6 group">
-                        <input type="text" name="destination" id="destination" value={formData.destination} onChange={handleChange} className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${formErrors.destination ? 'border-red-500' : ''}`} placeholder=" " required />
-                        <label htmlFor="destination" className="peer-focus:font-small absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Destination</label>
-                        <span className={` ${formErrors.destination ? 'text-sm text-red-500' : 'hidden'}`}>{formErrors.destination}</span>
-                    </div>
-                </div>
-
-                <div className="flex items-center justify-center w-full">
-                    <label htmlFor="images" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                            <svg aria-hidden="true" className="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                            <div className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</div>
-                            <div className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</div>
+                            <div className="mb-4">
+                                <label htmlFor="cost" className="block text-gray-700 font-bold mb-2">Cost</label>
+                                <input
+                                    type="number"
+                                    name="cost"
+                                    id="cost"
+                                    value={formData.cost}
+                                    onChange={handleChange}
+                                    className={`block w-full px-3 py-2 text-gray-700 border rounded ${formErrors.cost ? 'border-red-500' : 'border-gray-400'}`}
+                                    required
+                                />
+                                {formErrors.cost && <span className="text-sm text-red-500">{formErrors.cost}</span>}
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="availableSeats" className="block text-gray-700 font-bold mb-2">Available Seats</label>
+                                <input
+                                    type="number"
+                                    pattern="[0-99]{1}"
+                                    name="availableSeats"
+                                    id="availableSeats"
+                                    value={formData.cost}
+                                    onChange={handleChange}
+                                    className={`block w-full px-3 py-2 text-gray-700 border rounded ${formErrors.availableSeats ? 'border-red-500' : 'border-gray-400'}`}
+                                    required
+                                />
+                                {formErrors.availableSeats && <span className="text-sm text-red-500">{formErrors.availableSeats}</span>}
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="startingLocation" className="block text-gray-700 font-bold mb-2">Starting Location</label>
+                                <input
+                                    type="text"
+                                    name="startingLocation"
+                                    id="startingLocation"
+                                    value={formData.startingLocation}
+                                    onChange={handleChange}
+                                    className={`block w-full px-3 py-2 text-gray-700 border rounded ${formErrors.startingLocation ? 'border-red-500' : 'border-gray-400'}`}
+                                    required
+                                />
+                                {formErrors.startingLocation && <span className="text-sm text-red-500">{formErrors.startingLocation}</span>}
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="destination" className="block text-gray-700 font-bold mb-2">Destination</label>
+                                <input
+                                    type="text"
+                                    name="destination"
+                                    id="destination"
+                                    value={formData.destination}
+                                    onChange={handleChange}
+                                    className={`block w-full px-3 py-2 text-gray-700 border rounded ${formErrors.destination ? 'border-red-500' : 'border-gray-400'}`}
+                                    required
+                                />
+                                {formErrors.destination && <span className="text-sm text-red-500">{formErrors.destination}</span>}
+                            </div>
                         </div>
-                        <input id="images" type="file" className="hidden" />
-                    </label>
+                        <div className="grid md:grid-cols-1 md:gap-2 mb-2">
+                            <div className="flex items-center justify-center w-full">
+                                <label for="logo" className="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                        <svg aria-hidden="true" className="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                        <div className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</div>
+                                        <div className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</div>
+                                    </div>
+                                    <input id="logo" type="file" className="hidden" />
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-small rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Create</button>
+                    </form>
                 </div>
-
-                <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-small rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Create</button>
-
-
-            </form>
-            <div><ToastContainer position="bottom-center"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light" /></div>
+                <div className="col-span-1" style={{ backgroundImage: "url('https://source.unsplash.com/720x720/?travelling')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                </div>
+                <div><ToastContainer position="bottom-center"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light" /></div>
+            </div>
         </div>
     )
-
-
-    
-
-
 }
