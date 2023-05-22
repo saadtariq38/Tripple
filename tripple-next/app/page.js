@@ -12,7 +12,7 @@ export default function Home() {
 
 
         <main>
-            <section className="bg-center bg-no-repeat bg-cover" style={{ backgroundImage: "url('/main.jpg')" }}>
+            <section className="bg-center bg-no-repeat bg-cover" style={{ backgroundImage: "url('/main.jpg')", backgroundColor: "#4a5568", backgroundBlendMode: "multiply",}}>
                 <div className="px-4 mx-auto max-w-screen-xl text-center py-24 lg:py-30">
                     <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl">Travelling made easy</h1>
                     <p className="mb-8 text-lg font-normal text-white lg:text-xl sm:px-16 lg:px-48">Choose from a wide selection of verified trips, according to your trip preference.</p>
@@ -32,46 +32,46 @@ export default function Home() {
             <div className="grid grid-cols-4 md:grid-cols-4 gap-4 mt-24 flex justify-center">
                 <div className="grid gap-4">
                     <div>
-                        <img className="h-auto max-w-full rounded-lg" src="https://source.unsplash.com/1600x1600/?lakes" alt="" />
+                        <img className="h-auto max-w-full rounded-lg" src="/4.jpg" alt="" />
                     </div>
                     <div>
-                        <img className="h-auto max-w-full rounded-lg" src="https://source.unsplash.com/1600x1300/?mountains" alt="" />
+                        <img className="h-auto max-w-full rounded-lg" src="/11.jpg" alt="" />
                     </div>
                     <div>
-                        <img className="h-auto max-w-full rounded-lg" src="https://source.unsplash.com/1600x1900/?trips" alt="" />
-                    </div>
-                </div>
-                <div className="grid gap-4">
-                    <div>
-                        <img className="h-auto max-w-full rounded-lg" src="https://source.unsplash.com/1600x1100/?trips" alt="" />
-                    </div>
-                    <div>
-                        <img className="h-auto max-w-full rounded-lg" src="https://source.unsplash.com/1600x1900/?scenery" alt="" />
-                    </div>
-                    <div>
-                        <img className="h-auto max-w-full rounded-lg" src="https://source.unsplash.com/1600x1800/?beach" alt="" />
+                        <img className="h-auto max-w-full rounded-lg" src="/3.jpg" alt="" />
                     </div>
                 </div>
                 <div className="grid gap-4">
                     <div>
-                        <img className="h-auto max-w-full rounded-lg" src="https://source.unsplash.com/1600x1850/?exploration" alt="" />
+                        <img className="h-auto max-w-full rounded-lg" src="/1.jpg" alt="" />
                     </div>
                     <div>
-                        <img className="h-auto max-w-full rounded-lg" src="https://source.unsplash.com/1600x1600/?roads" alt="" />
+                        <img className="h-auto max-w-full rounded-lg" src="/5.jpg" alt="" />
                     </div>
                     <div>
-                        <img className="h-auto max-w-full rounded-lg" src="https://source.unsplash.com/1600x1350/?hiking" alt="" />
+                        <img className="h-auto max-w-full rounded-lg" src="/6.jpg" alt="" />
                     </div>
                 </div>
                 <div className="grid gap-4">
                     <div>
-                        <img className="h-auto max-w-full rounded-lg" src="https://source.unsplash.com/1600x1750/?lahore" alt="" />
+                        <img className="h-auto max-w-full rounded-lg" src="/9.jpg" alt="" />
                     </div>
                     <div>
-                        <img className="h-auto max-w-full rounded-lg" src="https://source.unsplash.com/1600x1650/?islamabad" alt="" />
+                        <img className="h-auto max-w-full rounded-lg" src="/8.jpg" alt="" />
                     </div>
                     <div>
-                        <img className="h-auto max-w-full rounded-lg" src="https://source.unsplash.com/1600x1400/?dubai" alt="" />
+                        <img className="h-auto max-w-full rounded-lg" src="/7.jpg" alt="" />
+                    </div>
+                </div>
+                <div className="grid gap-4">
+                    <div>
+                        <img className="h-auto max-w-full rounded-lg" src="/10.jpg" alt="" />
+                    </div>
+                    <div>
+                        <img className="h-auto max-w-full rounded-lg" src="/2.jpg" alt="" />
+                    </div>
+                    <div>
+                        <img className="h-auto max-w-full rounded-lg" src="/12.jpg" alt="" />
                     </div>
                 </div>
             </div>

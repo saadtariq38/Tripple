@@ -5,7 +5,7 @@ export default function RegisterSelect() {
     return (
         <div style={{ display: 'flex', alignItems: 'stretch', height: '100vh' }}>
 
-            <div className="w-1/2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700" style={{ display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', backgroundImage: "url('/traveller.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+            <div className="w-1/2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700" style={{ display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', backgroundImage: "url('/traveller.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: "#4a5568", backgroundBlendMode: "multiply" }}>
                 <a href="#">
                     <img className="rounded-t-lg" src="/docs/images/blog/image-1.jpg" alt="" />
                 </a>
@@ -29,7 +29,7 @@ export default function RegisterSelect() {
 
 
 
-            <div className="w-1/2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700" style={{ display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', backgroundImage: "url('/agency.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+            <div className="w-1/2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700" style={{ display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', backgroundImage: "url('/agency.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: "#4a5568", backgroundBlendMode: "multiply" }}>
                 <a href="#">
                     <img className="rounded-t-lg" src="/docs/images/blog/image-1.jpg" alt="" />
                 </a>
