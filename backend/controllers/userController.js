@@ -268,7 +268,7 @@ const loginUser = asyncHandler(async(req, res) => {
                 const refToken = generateRefreshToken( _id, role )
                 // localStorage.setItem('accessToken', accToken)
                 // localStorage.setItem('refreshToken', refToken)
-                console.log("weeee")
+               
 
                 User_Event.create({
                     user: _id,

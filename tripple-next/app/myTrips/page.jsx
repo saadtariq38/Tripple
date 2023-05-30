@@ -33,33 +33,46 @@ const MyTripsPage = () => {
   // }, []);
 
   const [userTrips, setUserTrips] = useState([]);
+  
   const accessToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
 
   //console.log(accessToken)
- 
+
 
   useEffect(() => {
     if (accessToken) {
       getUserRegisteredTrips(accessToken)
         .then((data) => {
           setUserTrips(data);
+          console.log("done")
         })
         .catch((error) => {
-          
-          console.log(error.message)
-          if(error.message === 'Not authorized'){ //check this later for the refreshing token thingie. not working rn
-            const newAccessToken = refreshToken(localStorage.getItem('refreshToken'))
-            localStorage.setItem('accessToken', newAccessToken)
-            getUserRegisteredTrips(accessToken)
-            .then((data) => {
-              setUserTrips(data);
-            })
+          console.log("frotnedn catch")
+          console.log(error.message);
+          if (error.message === "Token expired") {
+            console.log("Token expired. Refreshing token...");
+            refreshToken(localStorage.getItem('refreshToken'))
+              .then((newAccessToken) => {
+                console.log("Token refreshed");
+                localStorage.setItem('accessToken', newAccessToken);
+                return getUserRegisteredTrips(newAccessToken);
+              })
+              .then((data) => {
+                setUserTrips(data);
+                console.log("done")
+              })
+              .catch((refreshError) => {
+                console.log(refreshError.message);
+                // Handle the error when refreshing token fails
+              });
           }
         });
     }
+  }, []);
+ 
 
-    
-  }, [accessToken]);
+ 
+
 
   return (
     <div>

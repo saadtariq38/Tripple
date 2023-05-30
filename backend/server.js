@@ -1,5 +1,6 @@
 const express = require('express')
 const { errorHandler } = require('./middleware/errorMiddleware')
+
 const dotenv = require('dotenv').config()
 const colors = require('colors')
 const { connectDB } = require('./config/db')
@@ -15,10 +16,12 @@ app.use(cors());
 app.use(express.json())
 app.use(express.urlencoded({ extended : false}))
 
+
 app.use('/api/trips', require('./routes/tripRoutes'))
 app.use('/api/agent', require('./routes/agentRoutes'))
 app.use('/api/user', require('./routes/userRoutes'))
 
+//app.use(errorHandling)
 
 
 app.use(errorHandler)   //needs to be under routes

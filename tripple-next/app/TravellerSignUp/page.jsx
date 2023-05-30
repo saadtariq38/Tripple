@@ -36,7 +36,7 @@
 //       const validateForm = () => {
 //         let errors = {};
 //         let isValid = true;
-      
+
 //         // Validate email
 //         if (!formData.email) {
 //           errors.email = "Email is required";
@@ -45,7 +45,7 @@
 //           errors.email = "Email is invalid";
 //           isValid = false;
 //         }
-      
+
 //         // Validate password
 //         if (!formData.password) {
 //           errors.password = "Password is required";
@@ -54,7 +54,7 @@
 //           errors.password = "Password must be at least 8 characters long";
 //           isValid = false;
 //         }
-      
+
 //         // Validate confirm password
 //         if (!formData.confirmPassword) {
 //           errors.confirmPassword = "Confirm password is required";
@@ -63,25 +63,25 @@
 //           errors.confirmPassword = "Passwords do not match";
 //           isValid = false;
 //         }
-      
+
 //         // Validate name
 //         if (!formData.name) {
 //           errors.name = "Name is required";
 //           isValid = false;
 //         }
-      
+
 //         // Validate country
 //         if (!formData.country) {
 //           errors.country = "Country is required";
 //           isValid = false;
 //         }
-      
+
 //         // Validate passport number
 //         if (!formData.passport_number) {
 //           errors.passport_number = "Passport number is required";
 //           isValid = false;
 //         }
-      
+
 //         // Validate age
 //         if (!formData.age) {
 //           errors.age = "Age is required";
@@ -90,13 +90,13 @@
 //           errors.age = "Age must be a number";
 //           isValid = false;
 //         }
-      
+
 //         // Validate gender
 //         if (!formData.gender) {
 //           errors.gender = "Gender is required";
 //           isValid = false;
 //         }
-      
+
 //         // Validate phone number
 //         if (!formData.phone_number) {
 //           errors.phone_number = "Phone number is required";
@@ -105,19 +105,19 @@
 //           errors.phone_number = "Phone number must be an 11-digit number";
 //           isValid = false;
 //         }
-      
+
 //         setFormErrors(errors);
 //         setIsFormValid(isValid);
 //       };
 
 //     const handleSubmit = async (event) => {
-      
-        
+
+
 //         validateForm()
-        
+
 //         event.preventDefault();
 //         if (isFormValid) {
-           
+
 //             // get the form data
 //             // Remove confirmPassword field from formData
 //           const { confirmPassword, ...dataWithoutConfirmPassword } = formData;
@@ -126,9 +126,9 @@
 //           const dataWithRole = { ...dataWithoutConfirmPassword, role: 1 };
 
 //           // Send POST request with form data as x-www-url-encoded data in the request body
-            
 
-            
+
+
 
 //             // make the API request
 //             const response = await fetch('http://localhost:5000/api/user/register', {
@@ -222,7 +222,7 @@
 
 //     );
 // }
-  
+
 
 'use client'
 import Head from "next/head";
@@ -388,7 +388,7 @@ export default function SignUpTravellerPage() {
 
   //add red line conditional rendering for all here
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto my-4">
       <div className="grid grid-cols-2 gap-0">
         <div className="col-span-1">  <Head>
           <title>Register</title>
@@ -521,7 +521,7 @@ export default function SignUpTravellerPage() {
             <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg w-full sm:w-auto px-6 py-3 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
           </form>
         </div>
-        <div className="col-span-1" style={{ backgroundImage: "url('/regTrav.avif')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div className="col-span-1" style={{ background: `url('/regTraveller.jpg') no-repeat center/cover`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
         </div>
       </div>
     </div>

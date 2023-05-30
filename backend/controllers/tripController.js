@@ -3,7 +3,7 @@ const User_Agent = require('../models/user_agentModel')
 const Trip_Event = require("../models/tripEventsModel")
 
 const asyncHandler = require('express-async-handler')
-const { rawListeners } = require('../models/userModel')
+
 
 
 // @desc    Get all trips or filter by category and type according to body data
@@ -76,24 +76,45 @@ const getTrips = asyncHandler(async (req, res) => {
 // @route   GET /api/trips/userTrips
 // @access  Private
 const getUsertrips = asyncHandler(async (req, res) => {
-   const { _id, role } = req.user;
+    const { _id, role, } = req.user;
 
-   try {
-       if(role == 1) {
-        const userTrips = await Trip.find({ registeredUsers: _id });
-           res.status(200).json(userTrips)
-       } else if(role == 2) {
-          //  const user_agent = await User_Agent.find({user: _id})
-            const agent_trips = await Trip.find({agent: _id})
+    // if(req.err && req.err.statusCode === 401 && req.err.message === 'Token expired'){
+    //     throw new Error("Token expired")
+    // }
+
+    console.log(_id)
+    console.log(role)
+
+    try {
+        console.log("api try")
+        if (role == 1) {
+            const userTrips = await Trip.find({ registeredUsers: _id });
+            res.status(200).json(userTrips)
+        } else if (role == 2) {
+            //  const user_agent = await User_Agent.find({user: _id})
+            const agent_trips = await Trip.find({ agent: _id })
             res.status(200).json(agent_trips)
-       }
-   } catch (error) {
-    res.status(400)
-    throw new Error("Failed to get user trips")
-   }
+        }
+    } catch (error) {
+        console.log("in api");
+        if (error.message === 'Token expired') {
+            return res.status(401).send('Token expired');
+        }
+        
+    }
+
+    // if (req.err) {
+    //     console.log("akfkh")
+    //     res.status(401).json({ err: "Token expired" })
+    // } else {
+
+    //     }
+    // }
 
 
-})
+
+}
+)
 
 
 // @desc    Get one trip through id

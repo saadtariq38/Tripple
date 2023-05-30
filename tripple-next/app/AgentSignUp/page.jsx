@@ -367,9 +367,9 @@ export default function AgentSignUpPage() {
 
   return (
 
-      <div className="container mx-auto">
+      <div className="container mx-auto my-4">
         <div className="grid grid-cols-2 gap-0">
-          <div className="col-span-1" style={{ backgroundImage: "url('/regAgent.avif')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+          <div className="col-span-1" style={{ backgroundImage: "url('/regAgent.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
           </div>
           <div className="col-span-1">
             <Head>
