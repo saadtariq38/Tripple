@@ -13,8 +13,23 @@ const { generateAccessToken, generateRefreshToken } = require('../helper/tokenHe
 
 const asyncHandler = require('express-async-handler')
 
+// @desc    Get user name from user_ID
+// @route   GET /api/user/:id
+// @access  Public
+const getOneTravellerUser = asyncHandler(async (req, res) => {
+    const userData = await User_Traveller.findOne({ user : req.params.id }, 'name');
+  
+    if (!userData) {
+      res.status(404);
+      throw new Error('User data not found');
+    }
+  
+    res.status(200).json(userData.name);
+  });
+
+
 // @desc    Get agent user info
-// @route   POST /api/user/token
+// @route   POST /api/user/agent/:id
 // @access  Public
 const getOneAgentUser = asyncHandler( async (req, res) => {
     const agentData = await User_Agent.findById(req.params.id, 'user')
@@ -448,5 +463,6 @@ module.exports = {
   getAllTravellers,
   expiredToken,
   getOneAgentUser,
+  getOneTravellerUser,
   
 }

@@ -37,6 +37,8 @@ import {
 
 export default function TripDetail(props) {
 
+  console.log(props.usernames)
+  console.log("heh")
 
   const [progress, setProgress] = useState()
 
@@ -51,7 +53,21 @@ export default function TripDetail(props) {
     const accessToken = localStorage.getItem('accessToken')
     console.log("clicked")
     
-    if(selectedRating === 0 || selectedRating === null) {
+    if(!accessToken) {
+      toast.error("Please login or create a traveller account", {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+
+      window.location.href = '/login'
+    }
+    else if(selectedRating === 0 || selectedRating === null) {
       console.log("mewo")
       toast.error("Please add a rating to submit a review", {
         position: "bottom-center",
@@ -64,30 +80,43 @@ export default function TripDetail(props) {
         theme: "light",
       });
       //window.location.href = '/'
-    }
+    } else {
 
-    try {
-      
-      if(!review) {
-        console.log("here")
-        await rateTripOnlyRating(selectedRating, props._id, accessToken)
-       // dispatch(setTrip(props))
-       
-        toast.success('Trip rating added successfully', {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      } else {
-        console.log("hereEEE")
-        await rateTrip(selectedRating, review, props._id, accessToken)
+      try {
         
-        toast.success('Trip review with comment added successfully', {
+        if(!review) {
+          console.log("here")
+          await rateTripOnlyRating(selectedRating, props._id, accessToken)
+         // dispatch(setTrip(props))
+         
+          toast.success('Trip rating added successfully', {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        } else {
+          console.log("hereEEE")
+          await rateTrip(selectedRating, review, props._id, accessToken)
+          
+          toast.success('Trip review with comment added successfully', {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          // window.location.href = '/'
+        }
+      } catch (error) {
+        toast.error("Could not add review", {
           position: "bottom-center",
           autoClose: 5000,
           hideProgressBar: false,
@@ -97,24 +126,14 @@ export default function TripDetail(props) {
           progress: undefined,
           theme: "light",
         });
-        // window.location.href = '/'
       }
-    } catch (error) {
-      toast.error("Could not add review", {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+  
+        //window.location.href = '/'
+  
+      }
     }
 
-      //window.location.href = '/'
-
-    }
+    
 
 
   const handleChange = (event) => {
@@ -333,11 +352,11 @@ export default function TripDetail(props) {
               Comments
             </p>
 
-            <div className="overflow-y-scroll h-96">
+            <div className="overflow-y-scroll overflow-x-scroll h-96 w-64">
               {props.comments.map((comment) => {
                 return (
                   <div className="my-4">
-                    <p className="font-semibold">{`User: ${comment.user}`}</p>
+                    <p className="font-semibold">{`User: ${props.usernames[comment.user]}`}</p>
                     <p className="">{comment.text}</p>
                   </div>
                 );

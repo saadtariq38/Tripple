@@ -4,30 +4,59 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setTrip } from '@/redux/features/tripSlice';
 import TripDetail from './components/TripDetail';
+import getTravellerName from '@/lib/getTravellerName';
+
+
 
 export default function TripDetailsPage() {
   const dispatch = useDispatch();
   const storedTrip = useSelector((state) => state.trip.trip);
-  const [loading, setLoading] = useState(true);
+  const [usernames, setUsernames] = useState();
+  //const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       // check if `storedTrip` is not set
       if (!storedTrip) {
+        console.log("hll")
         const storedData = localStorage.getItem('tripDetailsData');
         if (storedData) {
           // dispatch the `setTrip` action to set the data to the store
           dispatch(setTrip(JSON.parse(storedData)));
         }
+        const users = {};
+        await Promise.all(
+          storedTrip.comments.map(async (comment) => {
+            users[comment.user] = await getTravellerName(comment.user);
+          })
+        );
+        setUsernames(users);
+        console.log("usernames")
+        console.log(usernames)
+      } else {
+        const users = {};
+        await Promise.all(
+          storedTrip.comments.map(async (comment) => {
+            
+            users[comment.user] = await getTravellerName(comment.user);
+            console.log("in loop", users[comment.user] )
+          })
+        );
+        setUsernames(users);
+        console.log("usernsmes")
+        console.log(usernames)
       }
-      setLoading(false);
+      //setLoading(false);
     }
+
+    
 
     fetchData();
   }, [dispatch, storedTrip]);
 
-  const [usernames, setUsernames] = useState()
-  
+
+
+
   // if (loading) {
   //   return (<div role="status">
   //     <svg aria-hidden="true" class="inline w-10 h-10 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -38,25 +67,30 @@ export default function TripDetailsPage() {
   //   </div>);
   // }
 
-  return (
-    <TripDetail
-      _id={storedTrip._id}
-      description={storedTrip.description}
-      images={storedTrip.images}
-      cost={storedTrip.cost}
-      rating={storedTrip.rating}
-      numOfRatings={storedTrip.numOfRatings}
-      destination={storedTrip.destination}
-      availableSeats={storedTrip.availableSeats}
-      agent={storedTrip.agent}
-      name={storedTrip.name}
-      duration={storedTrip.duration}
-      tripCategory={storedTrip.tripCategory}
-      tripType={storedTrip.tripType}
-      status={storedTrip.stastoredTrip}
-      comments={storedTrip.comments}
-      startingLocation={storedTrip.startingLocation}
-      itinerary={storedTrip.itinerary}
-    />
-  );
+  if(usernames && storedTrip){
+
+    return (
+      <TripDetail
+        _id={storedTrip._id}
+        description={storedTrip.description}
+        images={storedTrip.images}
+        cost={storedTrip.cost}
+        rating={storedTrip.rating}
+        numOfRatings={storedTrip.numOfRatings}
+        destination={storedTrip.destination}
+        availableSeats={storedTrip.availableSeats}
+        agent={storedTrip.agent}
+        name={storedTrip.name}
+        duration={storedTrip.duration}
+        tripCategory={storedTrip.tripCategory}
+        tripType={storedTrip.tripType}
+        status={storedTrip.stastoredTrip}
+        usernames={usernames}
+        comments={storedTrip.comments}
+        startingLocation={storedTrip.startingLocation}
+        itinerary={storedTrip.itinerary}
+      />
+    );
+  }
+
 }
