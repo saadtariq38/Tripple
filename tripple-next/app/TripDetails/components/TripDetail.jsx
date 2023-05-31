@@ -252,12 +252,7 @@ export default function TripDetail(props) {
       </div>
       <div className="flex-col flex justify-center items-center">
 
-        <button
-          className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          onClick={handleButtonClick}
-        >
-          Rate this trip
-        </button>
+
 
         {showRatingModal && (
           <div
@@ -277,11 +272,10 @@ export default function TripDetail(props) {
                     <label
                       key={value}
                       htmlFor={`rating-${value}`}
-                      className={`text-gray-700 cursor-pointer ${
-                        selectedRating !== null && selectedRating >= value
+                      className={`text-gray-700 cursor-pointer ${selectedRating !== null && selectedRating >= value
                           ? "text-yellow-500"
                           : ""
-                      } text-2xl`}
+                        } text-2xl`}
                     >
                       <input
                         type="radio"
@@ -331,20 +325,43 @@ export default function TripDetail(props) {
 
 
 
-        <div className="max-w-lg text-3xl font-semibold leading-normal text-gray-900 dark:text-white mb-20">{props.itinerary}</div>
-        <p className="max-w-lg text-2xl font-semibold leading-normal text-gray-900 dark:text-white pr-96">Comments</p>
-        {props.comments.map((comment) => {
-          return (
-            <div className="mt-12 pr-60">
-              <p className="my-1">{`User: ${comment.user}`}</p>
-              <p className="my-1">{comment.text}</p>
+
+        <div className="relative ">
+
+          <div className="max-w-lg mb-5 mt-2 border-4 rounded-lg p-5 border-indigo-400">
+            <p className="text-2xl font-semibold leading-normal text-gray-900 dark:text-white mb-6">
+              Comments
+            </p>
+
+            <div className="overflow-y-scroll h-96">
+              {props.comments.map((comment) => {
+                return (
+                  <div className="my-4">
+                    <p className="font-semibold">{`User: ${comment.user}`}</p>
+                    <p className="">{comment.text}</p>
+                  </div>
+                );
+              })}
             </div>
 
-          )
-        })}
+
+
+
+          </div>
+          <button
+            className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mt-17"
+            onClick={handleButtonClick}
+          >
+            Rate this trip
+          </button>
+        </div>
 
 
       </div>
+
+      <div className="max-w-lg text-2xl font-semibold leading-normal text-gray-900 dark:text-white mb-20 ml-12">{props.itinerary}</div>
+
+
 
       <div><ToastContainer position="bottom-center"
         autoClose={5000}
