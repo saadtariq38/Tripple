@@ -10,7 +10,7 @@ export default async function SortedTripList({ promise }) {
     const content = sortedTrips.map(trip => {
         
         return (
-            <div key={trip._id}>
+            <div key={trip._id} class = "text-white">
                 
                 <Trip
                     _id={trip._id}

@@ -23,8 +23,8 @@ export default function SortedTrip( props ) {
   return (
     <div className="max-w-4xl mx-auto grid grid-cols-1 lg:max-w-5xl lg:gap-x-20 lg:grid-cols-2 mt-16">
       <div className="relative p-3 col-start-1 row-start-1 flex flex-col-reverse rounded-lg bg-gradient-to-t from-black/75 via-black/0 sm:bg-none sm:row-start-2 sm:p-0 lg:row-start-1">
-        <h1 className="mt-1 text-lg font-semibold text-black sm:text-slate-900 md:text-2xl dark:sm:text-white">{props.name}</h1>
-        <p className="text-lg leading-4 font-medium text-black sm:text-slate-500 dark:sm:text-slate-400">Pkr {props.cost}/head</p>
+        <h1 className="mt-1 text-lg font-semibold text-white sm:text-slate-900 md:text-2xl dark:sm:text-white">{props.name}</h1>
+        <p className="text-lg leading-4 font-medium text-white sm:text-slate-500 dark:sm:text-slate-400">Pkr {props.cost}/head</p>
       </div>
       <div className="grid gap-4 col-start-1 col-end-3 row-start-1 sm:mb-6 sm:grid-cols-4 lg:gap-6 lg:col-start-2 lg:row-end-6 lg:row-span-6 lg:mb-0">
         <img src="/trip1.jpg" alt="" className="w-full h-60 object-cover rounded-lg sm:h-52 sm:col-span-2 lg:col-span-full" loading="lazy" />
@@ -33,7 +33,7 @@ export default function SortedTrip( props ) {
       </div>
       <dl className="mt-4 text-xs font-medium flex items-center row-start-2 sm:mt-1 sm:row-start-3 md:mt-2.5 lg:row-start-2">
         <dt className="sr-only">Reviews</dt>
-        <dd className="text-indigo-600 flex items-center dark:text-indigo-400">
+        <dd className="text-white flex items-center dark:text-indigo-400">
           <svg width="24" height="24" fill="none" aria-hidden="true" className="mr-1 stroke-current dark:stroke-indigo-500">
             <path d="m12 5 2 5h5l-4 4 2.103 5L12 16l-5.103 3L9 14l-4-4h5l2-5Z" th="2" cap="round" strokeLinejoin="round" />
           </svg>

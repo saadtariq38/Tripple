@@ -59,7 +59,7 @@ export default function AgentTripDetail( props ) {
     
   }
   return (
-    <div className="flex justify-center items-center my-20">
+    <div className="flex justify-center items-center my-5" style={{ backgroundImage: "url('/alt.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: "#4a5568", backgroundBlendMode: "multiply"}}>
       <div className="mr-20">
       <Card className="w-full max-w-[26rem] shadow-lg">
       <CardHeader floated={false} color="blue-gray">
@@ -134,8 +134,8 @@ export default function AgentTripDetail( props ) {
       <div className="flex-col flex justify-center items-center">
 
 
-        <div className="max-w-lg text-3xl font-semibold leading-normal text-gray-900 dark:text-white mb-20">{props.itinerary}</div>
-        <p className="max-w-lg text-2xl font-semibold leading-normal text-gray-900 dark:text-white pr-96">Registered users</p>
+        <div className="max-w-lg text-3xl font-semibold leading-normal text-white dark:text-white mb-20">{props.itinerary}</div>
+        <p className="max-w-lg text-2xl font-semibold leading-normal text-white dark:text-white pr-96">Registered users</p>
         {props.registeredUsers.map((user) => {
           return (
             <div className="mt-12 pr-60">

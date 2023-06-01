@@ -199,7 +199,7 @@ export default function TripDetail(props) {
     }
   }
   return (
-    <div className="flex justify-center items-center my-20">
+    <div className="flex justify-center items-center my-5" style={{ backgroundImage: "url('/sortedDeets.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: "#4a5568", backgroundBlendMode: "multiply" }}>
       <div className="mr-20">
         <Card className="w-full max-w-[26rem] shadow-lg">
           <CardHeader floated={false} color="blue-gray">
@@ -348,7 +348,7 @@ export default function TripDetail(props) {
         <div className="relative ">
 
           <div className="max-w-lg mb-5 mt-2 border-4 rounded-lg p-5 border-indigo-400">
-            <p className="text-2xl font-semibold leading-normal text-gray-900 dark:text-white mb-6">
+            <p className="text-2xl font-semibold leading-normal text-white dark:text-white mb-6">
               Comments
             </p>
 
@@ -356,8 +356,8 @@ export default function TripDetail(props) {
               {props.comments.map((comment) => {
                 return (
                   <div className="my-4">
-                    <p className="font-semibold">{`User: ${props.usernames[comment.user]}`}</p>
-                    <p className="">{comment.text}</p>
+                    <p className="font-semibold text-white">{`User: ${props.usernames[comment.user]}`}</p>
+                    <p className="text-white">{comment.text}</p>
                   </div>
                 );
               })}
@@ -378,7 +378,7 @@ export default function TripDetail(props) {
 
       </div>
 
-      <div className="max-w-lg text-2xl font-semibold leading-normal text-gray-900 dark:text-white mb-20 ml-12">{props.itinerary}</div>
+      <div className="max-w-lg text-2xl font-semibold leading-normal text-white dark:text-white mb-20 ml-12">{props.itinerary}</div>
 
 
 

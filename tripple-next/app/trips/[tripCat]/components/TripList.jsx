@@ -9,7 +9,7 @@ export default async function TripList({ promise }) {
     const content = trips.map(trip => {
         
         return (
-            <div key={trip._id}>
+            <div key={trip._id} class = "text-white" >
                 
                 <Trip
                     _id={trip._id}

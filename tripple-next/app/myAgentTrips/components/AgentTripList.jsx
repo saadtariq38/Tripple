@@ -7,7 +7,7 @@ export default function AgentTripList({ agentTrips }) {
 
     const content = agentTrips.map((trip => {
         return (
-            <div key={trip._id}>
+            <div key={trip._id} class = "text-white">
                 
                 <AgentTrip
                     _id={trip._id}
