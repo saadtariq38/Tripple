@@ -13,6 +13,7 @@ async function TripCategoryDisplay({ params: { tripCat } }) {
 
   tripCat = tripCat === 'all' ? '' : tripCat;
   const tripData = getCatTrips(tripCat);
+  console.log(tripData)
 
 
 

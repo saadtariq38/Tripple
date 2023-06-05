@@ -14,8 +14,8 @@ export default function CreateTripPage() {
         description: "",
         duration: "",
         images: "",
-        tripCategory: "",
-        tripType: "",
+        tripCategory: "educational",
+        tripType: "local",
         cost: "",
         availableSeats: "",
         startingLocation: "",
@@ -66,13 +66,13 @@ export default function CreateTripPage() {
         }
         console.log(tripCategory)
         // Check if tripCategory is one of "educational", "entertainment", or "recreational"
-        if (!["Educational", "Entertainment", "Recreational"].includes(tripCategory)) {
+        if (!["educational", "entertainment", "recreational"].includes(tripCategory)) {
             errors.tripCategory = "Trip category must be one of 'educational', 'entertainment', or 'recreational'";
             isValid = false;
         }
         console.log(tripType)
         // Check if tripType is one of "local" or "international"
-        if (!["Local", "International"].includes(tripType)) {
+        if (!["local", "international"].includes(tripType)) {
             errors.tripType = "Trip type must be one of 'local' or 'international'";
             isValid = false;
         }
@@ -306,7 +306,7 @@ export default function CreateTripPage() {
                                     pattern="[0-99]{1}"
                                     name="availableSeats"
                                     id="availableSeats"
-                                    value={formData.cost}
+                                    value={formData.availableSeats}
                                     onChange={handleChange}
                                     className={`block w-full px-3 py-2 text-gray-700 border rounded ${formErrors.availableSeats ? 'border-red-500' : 'border-gray-400'}`}
                                     required

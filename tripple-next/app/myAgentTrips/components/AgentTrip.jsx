@@ -15,9 +15,12 @@ export default function AgentTrip(props) {
 
     const dispatch = useDispatch()
 
-    function handleTripClick(trip) {
-        dispatch(setAgentTrip(trip))
-    }
+  function handleTripClick(trip) {
+    const jsonTrip = JSON.stringify(trip);
+    localStorage.setItem('AgentTripDetailsData', jsonTrip)
+    dispatch(setAgentTrip(trip))
+
+  }
 
     async function deleteTripClick(tripId) {
         try {

@@ -30,37 +30,37 @@ import {
 
 
 export default function AgentTripDetail( props ) {
-  const [progress, setProgress] = useState()
+  //const [progress, setProgress] = useState()
 
-  const onEditClick = async () => {
+  // const onEditClick = async () => {
    
-        // toast.error("Please login before registering!", {
-        //   position: "bottom-center",
-        //   autoClose: 5000,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        //   theme: "light",
-        // });
+  //       // toast.error("Please login before registering!", {
+  //       //   position: "bottom-center",
+  //       //   autoClose: 5000,
+  //       //   hideProgressBar: false,
+  //       //   closeOnClick: true,
+  //       //   pauseOnHover: true,
+  //       //   draggable: true,
+  //       //   progress: undefined,
+  //       //   theme: "light",
+  //       // });
        
-    //   toast.success('Registered Successfully!', {
-    //     position: "bottom-center",
-    //     autoClose: 5000,
-    //     hideProgressBar: false,
-    //     closeOnClick: true,
-    //     pauseOnHover: true,
-    //     draggable: true,
-    //     progress: undefined,
-    //     theme: "light",
-    //   });
+  //   //   toast.success('Registered Successfully!', {
+  //   //     position: "bottom-center",
+  //   //     autoClose: 5000,
+  //   //     hideProgressBar: false,
+  //   //     closeOnClick: true,
+  //   //     pauseOnHover: true,
+  //   //     draggable: true,
+  //   //     progress: undefined,
+  //   //     theme: "light",
+  //   //   });
 
     
-  }
+  // }
   return (
     <div className="flex justify-center items-center my-5" style={{ backgroundImage: "url('/alt.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: "#4a5568", backgroundBlendMode: "multiply"}}>
-      <div className="mr-20">
+      <div className="mx-20">
       <Card className="w-full max-w-[26rem] shadow-lg">
       <CardHeader floated={false} color="blue-gray">
         <img
@@ -131,33 +131,43 @@ export default function AgentTripDetail( props ) {
       </CardFooter>
     </Card>
       </div>
-      <div className="flex-col flex justify-center items-center">
+      <div className=" flex justify-center items-center">
 
 
-        <div className="max-w-lg text-3xl font-semibold leading-normal text-white dark:text-white mb-20">{props.itinerary}</div>
-        <p className="max-w-lg text-2xl font-semibold leading-normal text-white dark:text-white pr-96">Registered users</p>
-        {props.registeredUsers.map((user) => {
-          return (
-            <div className="mt-12 pr-60">
-              <p className="my-1">{`User: ${user}`}</p>
-            </div>
-        
-         )})}
+
+        <div className="max-w-lg mb-5 mt-2 border-4 rounded-lg p-5 border-indigo-400">
+
+          <p className="max-w-lg text-2xl font-semibold leading-normal text-white dark:text-white">Registered Users</p>
+          <div className="overflow-y-scroll h-96 w-60">
+            {props.registeredUsers.map((user) => {
+
+              return (
+                <div className="my-4 pr-80 mr-8" >
+                  <p className="font-semibold text-white">{`User: ${props.usernames[user].name}`}</p>
+                  <p className="text-white">{`Phone: ${props.usernames[user].phone_number}`}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
 
+        <div className="max-w-lg text-3xl font-semibold leading-normal text-white dark:text-white mb-20 mx-16">{props.itinerary}</div>
+
+
+        <div><ToastContainer position="bottom-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light" /></div>
       </div>
 
-      <div><ToastContainer position="bottom-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light" /></div>
-     
+
     </div>
 
     
