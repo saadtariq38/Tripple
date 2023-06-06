@@ -40,7 +40,7 @@ export default function TripDetail(props) {
   console.log(props.usernames)
   console.log("heh")
 
-  const [progress, setProgress] = useState()
+  //const [progress, setProgress] = useState()
 
   const [showRatingModal, setShowRatingModal] = useState(false)
 
@@ -169,22 +169,53 @@ export default function TripDetail(props) {
           return
         }, 1500)
       }
-      await registerForTrip(tripId, accessToken)
-      setProgress("Registered successfully")
-      toast.success('Registered Successfully!', {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      await registerForTrip(tripId, accessToken).then(() => {
+
+        //setProgress("Registered successfully")
+        toast.success('Registered Successfully!', {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      })
+        .catch((error) => {
+          console.log("frotnedn catch")
+          console.log(error.message);
+          if (error.message === "Token expired") {
+            console.log("Token expired. Refreshing token...");
+            refreshToken(localStorage.getItem('refreshToken'))
+              .then((newAccessToken) => {
+                console.log("Token refreshed");
+                localStorage.setItem('accessToken', newAccessToken);
+                return registerForTrip(tripId, newAccessToken);
+              })
+              .then(() => {
+                //setProgress("Registered successfully")
+                toast.success('Registered Successfully!', {
+                  position: "bottom-center",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                });
+              })
+              .catch((error) => {
+                console.log("refresh error");
+                console.log(error.message)
+              })
+          }})
 
     } catch (error) {
       if (error.message === "Unauthorized-only traveller can register for trips") {
-        setProgress("Only travellers can register for trips")
+        //setProgress("Only travellers can register for trips")
         toast.error("Only Travellers can register for trips!", {
           position: "bottom-center",
           autoClose: 5000,

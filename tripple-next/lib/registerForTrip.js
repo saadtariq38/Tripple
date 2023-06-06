@@ -19,10 +19,17 @@ const registerForTrip = async (tripId, accessToken) => {
         method: 'POST',
         headers,
       });
-      const data = await response.json();
-      
+      if(response.status == 200){
+        const data = await response.json();
+      } else if(response.status == 401) {
+        console.log("token error thrown in register for trip")
+        throw new Error("Token expired")
+      } else {
+        throw new Error( `Error with status code ${response.status}`)
+      }
     } catch (error) {
       console.log(error);
+      throw error
     }
   };
   

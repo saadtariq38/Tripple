@@ -1,6 +1,6 @@
 export default function LoadingSkeleton() {
     return (
-        <>
+        <div className="mx-20 my-32">
 
             <div role="status" class="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
                 <div class="flex items-center justify-center w-full h-48 bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
@@ -48,7 +48,7 @@ export default function LoadingSkeleton() {
                 </div>
                 <span class="sr-only">Loading...</span>
             </div>
-        </>
+        </div>
 
 
 

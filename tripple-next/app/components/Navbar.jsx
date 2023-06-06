@@ -50,7 +50,7 @@ export default function NavbarComponent() {
       >
         <button
         type = "button"
-        className=" bg-transparent text-black flex items-center" onClick={() => setContactUs(true)}>
+        className=" bg-transparent text-black font-normal flex items-center" onClick={() => setContactUs(true)}>
           Contact Us
         </button>
       </Typography>
