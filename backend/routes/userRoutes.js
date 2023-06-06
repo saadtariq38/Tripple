@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { getMe, getAllUsers, registerUser, deleteUser, updateUser, loginUser, getAllTravellers, getAllAgents, expiredToken, getOneAgentUser, getOneTravellerUser, getOneTravellerData } = require('../controllers/userController')
+const { getMe, getAllUsers, registerUser, deleteUser, updateUser, loginUser, getAllTravellers, getAllAgents, expiredToken, getOneAgentUser, getOneTravellerUser, getOneTravellerData, emailSend, changePassword } = require('../controllers/userController')
 const { protect } = require('../middleware/authMiddleware')
 
 
@@ -15,7 +15,8 @@ router.route('/token').post(expiredToken)
 router.route('/agent/:id').get(getOneAgentUser)
 router.route('/details/:id').get(getOneTravellerData)
 router.route('/:id').delete(protect, deleteUser).put(protect, updateUser).get(getOneTravellerUser)
-
+router.route('/email-send').post(emailSend)
+router.route('/change-password').post(changePassword)
     
 
 

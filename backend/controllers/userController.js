@@ -2,6 +2,7 @@ const User = require('../models/userModel')
 const User_Traveller = require('../models/user_travellerModel')
 const User_Agent = require('../models/user_agentModel')
 const User_Event = require("../models/userEventsModel")
+const Otp = require('../models/otpModel')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { generateAccessToken, generateRefreshToken } = require('../helper/tokenHelpers')
@@ -467,7 +468,97 @@ const updateUser = asyncHandler(async(req, res) => {
 
 })
 
+// @desc    Enter email to change password
+// @route   POST /api/user/email-send
+// @access  Private
+const emailSend = asyncHandler(async(req, res) => {
+    let data = await User.findOne({email: req.body.email});
+    const response = {};
+    if(data){
+        let otpCode = Math.floor((Math.random() * 10000) +1);
+        let otpData = new Otp({
+            email: req.body.email,
+            code: otpCode,
+            expiry: new Date().getTime() + 300*1000
+        })
+        let otpResponse = await otpData.save();
+        mailer(req.body.email, otpCode)
+    }
+    else {
+        res.status(400)
+        throw new Error("Invalid email")
+    }
+    res.status(200).json("Please check your email");
 
+})
+
+const changePassword = asyncHandler(async (req, res) => {
+    const { email, otpCode } = req.body;
+    const response = {};
+  
+    const otpData = await Otp.findOne({ email, code: otpCode });
+  
+    if (otpData) {
+      const currentTime = new Date().getTime();
+      const diff = otpData.expiry - currentTime;
+  
+      if (diff < 0) {
+        response.message = 'Token Expired';
+        response.statusText = 'Error';
+      } else {
+        const user = await User.findOne({ email: req.body.email });
+  
+        if (user) {
+          const newPassword = req.body.password;
+          const salt = await bcrypt.genSalt(10);
+          const hashedPassword = await bcrypt.hash(newPassword, salt);
+  
+          user.password = hashedPassword;
+          await user.save();
+  
+          response.message = 'Password Changed';
+          response.statusText = 'Success';
+        } else {
+          response.message = 'User not found';
+          response.statusText = 'Error';
+        }
+      }
+    } else {
+      response.message = 'Invalid OTP';
+      response.statusText = 'Error';
+    }
+  
+    res.status(200).json(response);
+  });
+  
+
+const mailer = (email, otp)=>{
+var nodemailer = require('nodemailer');
+var transporter = nodemailer.createTransport({ 
+service: 'gmail',
+port: 587,
+secure: false,
+ auth: {
+user: 'tripple.app01@gmail.com',
+pass: 'whimxhlknlfltfbw'
+ }
+});
+
+var mailOptions = {
+from: 'tripple.app01@gmail.com',
+to: email,
+subject: 'Change Password Otp',
+text: "Your otp is " + otp,
+};
+
+transporter.sendMail(mailOptions, function(error, info){
+if (error) {
+console.log(error);
+} else {
+console.log('Email sent');
+}
+});
+}   
 
 
 
@@ -486,5 +577,7 @@ module.exports = {
   getOneAgentUser,
   getOneTravellerUser,
   getOneTravellerData,
+  emailSend,
+  changePassword,
   
 }

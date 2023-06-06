@@ -12,6 +12,7 @@
     "@heroicons/react": "^2.0.17",
     "@material-tailwind/react": "^1.4.2",
     "@reduxjs/toolkit": "^1.9.3",
+    "axios": "^1.4.0",
     "eslint": "8.37.0",
     "eslint-config-next": "13.2.4",
     "flowbite": "^1.6.4",
